@@ -14,6 +14,11 @@ public class DetailsPanel extends JPanel {
     private ButtonGroup cashDiscountSelectionRadioButtonGroup;
     private JTextField flatRateDiscountTextField;
     private JTextField percentageRateDiscountTextField;
+    private JRadioButton loanSectionRadioButton;
+    private JLabel interestRateLabel;
+    private JLabel loanDurationInMonthsLabel;
+    private JTextField interestRateTextField;
+    private JTextField loanDurationInMonthsTextField;
 
     public DetailsPanel() {
         this.setLayout(null);
@@ -30,6 +35,34 @@ public class DetailsPanel extends JPanel {
 
         // Create the components related to cash discount incentive.
         this.createCashDiscountIncentiveComponents();
+
+        // Create the components related to loan incentive.
+        this.createLoanIncentiveComponents();
+    }
+
+    private void createLoanIncentiveComponents() {
+        loanSectionRadioButton = new JRadioButton("Loan Incentive");
+        loanSectionRadioButton.setFont(new Font("Lucida Grande", Font.BOLD, 15));
+        loanSectionRadioButton.setBounds(68, 270, 204, 23);
+        this.add(loanSectionRadioButton);
+
+        interestRateLabel = new JLabel("Interest Rate (%)");
+        interestRateLabel.setBounds(107, 304, 102, 16);
+        this.add(interestRateLabel);
+
+        loanDurationInMonthsLabel = new JLabel("Number of months");
+        loanDurationInMonthsLabel.setBounds(107, 332, 119, 16);
+        this.add(loanDurationInMonthsLabel);
+
+        interestRateTextField = new JTextField();
+        interestRateTextField.setBounds(238, 299, 50, 26);
+        this.add(interestRateTextField);
+        interestRateTextField.setColumns(10);
+
+        loanDurationInMonthsTextField = new JTextField();
+        loanDurationInMonthsTextField.setColumns(10);
+        loanDurationInMonthsTextField.setBounds(238, 327, 50, 26);
+        this.add(loanDurationInMonthsTextField);
     }
 
     private void createCashDiscountIncentiveComponents() {
