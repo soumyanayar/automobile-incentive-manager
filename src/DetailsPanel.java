@@ -36,6 +36,8 @@ public class DetailsPanel extends JPanel {
     private JButton detailsPageCancelButton;
     private JButton detailsPageNextButton;
 
+    private ButtonGroup incentiveGroups;
+
     public DetailsPanel() {
         this.setLayout(null);
         this.createDetailsPanelComponents();
@@ -63,6 +65,17 @@ public class DetailsPanel extends JPanel {
 
         // Create the components related to navigation of the pages.
         this.createNavigationComponentsFromDetailsPage();
+
+        // Add Incentive groups to a radio button group
+        this.createExclusiveIncentiveGroups();
+    }
+
+    private void createExclusiveIncentiveGroups() {
+        incentiveGroups = new ButtonGroup();
+        incentiveGroups.add(cashDicountSectionRadioButton);
+        incentiveGroups.add(loanSectionRadioButton);
+        incentiveGroups.add(rebateSectionRadioButton);
+        incentiveGroups.add(leaseSectionRadioButton);
     }
 
     private void createNavigationComponentsFromDetailsPage() {
