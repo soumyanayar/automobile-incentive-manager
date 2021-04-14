@@ -20,6 +20,22 @@ public class DetailsPanel extends JPanel {
     private JTextField interestRateTextField;
     private JTextField loanDurationInMonthsTextField;
 
+    private JRadioButton rebateSectionRadioButton;
+    private JCheckBox newGradRebateCheckBox;
+    private JCheckBox militaryRebateCheckBox;
+    private JTextField newGradRebateTextBox;
+    private JTextField militaryRebateTextBox;
+
+    private JRadioButton leaseSectionRadioButton;
+    private JLabel leaseMonthlyPaymentInDollarsLabel;
+    private JLabel leaseDurationInMonthsLabel;
+    private JLabel leaseSigningAmountLabel;
+    private JTextField leaseMonthlyPaymentInDollarsTextBox;
+    private JTextField leaseDurationInMonthsTextBox;
+    private JTextField leaseSigningAmountTextBox;
+    private JButton detailsPageCancelButton;
+    private JButton detailsPageNextButton;
+
     public DetailsPanel() {
         this.setLayout(null);
         this.createDetailsPanelComponents();
@@ -38,6 +54,84 @@ public class DetailsPanel extends JPanel {
 
         // Create the components related to loan incentive.
         this.createLoanIncentiveComponents();
+
+        // Create the components related to the rebate incentive.
+        this.createRebateIncentiveComponents();
+
+        // Create the components related to the leasing incentive.
+        this.createLeaseIncentiveComponents();
+
+        // Create the components related to navigation of the pages.
+        this.createNavigationComponentsFromDetailsPage();
+    }
+
+    private void createNavigationComponentsFromDetailsPage() {
+        detailsPageCancelButton = new JButton("Cancel");
+        detailsPageCancelButton.setBounds(250, 448, 117, 29);
+        this.add(detailsPageCancelButton);
+
+        detailsPageNextButton = new JButton("Next");
+        detailsPageNextButton.setBounds(450, 448, 117, 29);
+        this.add(detailsPageNextButton);
+    }
+
+    private void createLeaseIncentiveComponents() {
+        leaseSectionRadioButton = new JRadioButton("Lease Incentive");
+        leaseSectionRadioButton.setFont(new Font("Lucida Grande", Font.BOLD, 15));
+        leaseSectionRadioButton.setBounds(432, 271, 204, 23);
+        this.add(leaseSectionRadioButton);
+
+        leaseMonthlyPaymentInDollarsLabel = new JLabel("Monthly Payment of ($)");
+        leaseMonthlyPaymentInDollarsLabel.setBounds(456, 304, 153, 16);
+        this.add(leaseMonthlyPaymentInDollarsLabel);
+
+        leaseDurationInMonthsLabel = new JLabel("Number of months");
+        leaseDurationInMonthsLabel.setBounds(456, 332, 153, 16);
+        this.add(leaseDurationInMonthsLabel);
+
+        leaseSigningAmountLabel = new JLabel("Signing Amount of ($)");
+        leaseSigningAmountLabel.setBounds(456, 360, 153, 16);
+        this.add(leaseSigningAmountLabel);
+
+        leaseMonthlyPaymentInDollarsTextBox = new JTextField();
+        leaseMonthlyPaymentInDollarsTextBox.setBounds(621, 299, 56, 26);
+        this.add(leaseMonthlyPaymentInDollarsTextBox);
+        leaseMonthlyPaymentInDollarsTextBox.setColumns(10);
+
+        leaseDurationInMonthsTextBox = new JTextField();
+        leaseDurationInMonthsTextBox.setBounds(621, 327, 56, 26);
+        this.add(leaseDurationInMonthsTextBox);
+        leaseDurationInMonthsTextBox.setColumns(10);
+
+        leaseSigningAmountTextBox = new JTextField();
+        leaseSigningAmountTextBox.setColumns(10);
+        leaseSigningAmountTextBox.setBounds(621, 355, 56, 26);
+        this.add(leaseSigningAmountTextBox);
+    }
+
+    private void createRebateIncentiveComponents() {
+        rebateSectionRadioButton = new JRadioButton("Rebate Incentive");
+        rebateSectionRadioButton.setFont(new Font("Lucida Grande", Font.BOLD, 15));
+        rebateSectionRadioButton.setBounds(427, 121, 204, 23);
+        this.add(rebateSectionRadioButton);
+
+        newGradRebateCheckBox = new JCheckBox("Rebate for new Grads");
+        newGradRebateCheckBox.setBounds(456, 156, 165, 23);
+        this.add(newGradRebateCheckBox);
+
+        militaryRebateCheckBox = new JCheckBox("Rebate for Millitary Veterans");
+        militaryRebateCheckBox.setBounds(456, 191, 221, 23);
+        this.add(militaryRebateCheckBox);
+
+        newGradRebateTextBox = new JTextField();
+        newGradRebateTextBox.setBounds(688, 155, 63, 26);
+        this.add(newGradRebateTextBox);
+        newGradRebateTextBox.setColumns(10);
+
+        militaryRebateTextBox = new JTextField();
+        militaryRebateTextBox.setColumns(10);
+        militaryRebateTextBox.setBounds(688, 190, 63, 26);
+        this.add(militaryRebateTextBox);
     }
 
     private void createLoanIncentiveComponents() {
