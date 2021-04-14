@@ -6,6 +6,10 @@ public class DetailsPanel extends JPanel {
     CalendarPanel startDateCalendarPanel;
     JLabel startDateLabel;
 
+    JTextField endDateTextBox;
+    CalendarPanel endDateCalendarPanel;
+    JLabel endDateLabel;
+
     public DetailsPanel() {
         this.setLayout(null);
         this.createDetailsPanelComponents();
@@ -13,8 +17,11 @@ public class DetailsPanel extends JPanel {
 
     private void createDetailsPanelComponents()
     {
-        // Create the components related to start date of the incentive.:q
+        // Create the components related to start date of the incentive.
         this.createStartDateComponents();
+
+        // Create the components related to end date of the incentive.
+        this.createEndDateComponents();
     }
 
     private void createStartDateComponents() {
@@ -30,5 +37,20 @@ public class DetailsPanel extends JPanel {
         startDateLabel.setFont(new Font("Lucida Grande", Font.BOLD, 15));
         startDateLabel.setBounds(68, 26, 89, 30);
         this.add(startDateLabel);
+    }
+
+    private void createEndDateComponents() {
+        endDateTextBox = new JTextField();
+        endDateTextBox.setBounds(551, 26, 89, 30);
+
+        endDateCalendarPanel = new CalendarPanel(endDateTextBox, "yyyy/MM/dd");
+        endDateCalendarPanel.initCalendarPanel();
+        this.add(endDateCalendarPanel);
+        this.add(endDateTextBox);
+
+        endDateLabel = new JLabel("End Date");
+        endDateLabel.setFont(new Font("Lucida Grande", Font.BOLD, 15));
+        endDateLabel.setBounds(432, 26, 89, 30);
+        this.add(endDateLabel);
     }
 }
