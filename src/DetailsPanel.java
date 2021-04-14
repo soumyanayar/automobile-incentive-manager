@@ -2,13 +2,18 @@ import javax.swing.*;
 import java.awt.*;
 
 public class DetailsPanel extends JPanel {
-    JTextField startDateTextBox;
-    CalendarPanel startDateCalendarPanel;
-    JLabel startDateLabel;
-
-    JTextField endDateTextBox;
-    CalendarPanel endDateCalendarPanel;
-    JLabel endDateLabel;
+    private JTextField startDateTextBox;
+    private CalendarPanel startDateCalendarPanel;
+    private JLabel startDateLabel;
+    private JTextField endDateTextBox;
+    private CalendarPanel endDateCalendarPanel;
+    private JLabel endDateLabel;
+    private JRadioButton cashDicountSectionRadioButton;
+    private JRadioButton flatRateDiscountRadioButton;
+    private JRadioButton percentageRateDiscountRadioButton;
+    private ButtonGroup cashDiscountSelectionRadioButtonGroup;
+    private JTextField flatRateDiscountTextField;
+    private JTextField percentageRateDiscountTextField;
 
     public DetailsPanel() {
         this.setLayout(null);
@@ -22,6 +27,38 @@ public class DetailsPanel extends JPanel {
 
         // Create the components related to end date of the incentive.
         this.createEndDateComponents();
+
+        // Create the components related to cash discount incentive.
+        this.createCashDiscountIncentiveComponents();
+    }
+
+    private void createCashDiscountIncentiveComponents() {
+        cashDicountSectionRadioButton = new JRadioButton("Discount Incentive");
+        cashDicountSectionRadioButton.setFont(new Font("Lucida Grande", Font.BOLD, 15));
+        cashDicountSectionRadioButton.setBounds(68, 121, 204, 23);
+        this.add(cashDicountSectionRadioButton);
+
+        flatRateDiscountRadioButton = new JRadioButton("$");
+        flatRateDiscountRadioButton.setBounds(107, 156, 50, 23);
+        this.add(flatRateDiscountRadioButton);
+
+        percentageRateDiscountRadioButton = new JRadioButton("%");
+        percentageRateDiscountRadioButton.setBounds(107, 191, 42, 23);
+        this.add(percentageRateDiscountRadioButton);
+
+        cashDiscountSelectionRadioButtonGroup = new ButtonGroup();
+        cashDiscountSelectionRadioButtonGroup.add(flatRateDiscountRadioButton);
+        cashDiscountSelectionRadioButtonGroup.add(percentageRateDiscountRadioButton);
+
+        flatRateDiscountTextField = new JTextField();
+        flatRateDiscountTextField.setBounds(161, 156, 75, 26);
+        this.add(flatRateDiscountTextField);
+        flatRateDiscountTextField.setColumns(10);
+
+        percentageRateDiscountTextField = new JTextField();
+        percentageRateDiscountTextField.setColumns(10);
+        percentageRateDiscountTextField.setBounds(161, 188, 75, 26);
+        this.add(percentageRateDiscountTextField);
     }
 
     private void createStartDateComponents() {
