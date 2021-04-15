@@ -1,5 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Date;
 
 public class DetailsPanel extends JPanel {
     private JTextField startDateTextBox;
@@ -68,6 +73,55 @@ public class DetailsPanel extends JPanel {
 
         // Add Incentive groups to a radio button group
         this.createExclusiveIncentiveGroups();
+
+        addButtonClickActionListenerToNextButton();
+    }
+
+    private void addButtonClickActionListenerToNextButton() {
+        detailsPageNextButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                validateIncentiveDetailsAndCreateIncentiveInstance();
+            }
+        });
+    }
+
+    private void validateIncentiveDetailsAndCreateIncentiveInstance() {
+        Date startDate = validateAndParseDate(startDateTextBox.getText(), "Start Date");
+        Date endDate = validateAndParseDate(endDateTextBox.getText(), "End Date");
+        if (IncentiveDataValidator.isNull(startDate) || IncentiveDataValidator.isNull(endDate)) {
+            return;
+        }
+
+        if (startDate.after(endDate)) {
+            JOptionPane.showMessageDialog(null, "Start Date: "+ startDate + " cannot be after End Date: " + endDate, "Start Date greater than End Date", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+    }
+
+    private Date validateAndParseDate(String date, String title) {
+        if (IncentiveDataValidator.isNullOrEmpty(date)) {
+            JOptionPane.showMessageDialog(null, title + " field cannot be empty", "Required Field Missing", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+
+        Date startDate = null;
+        try {
+            startDate = IncentiveDataValidator.parseDateFromString(date);
+        } catch (ParseException parseException) {
+            parseException.printStackTrace();
+        }
+
+        if (startDate == null) {
+            JOptionPane.showMessageDialog(null, title + " needs to be a valid date in the format yyyy/mm/dd", "Invalid StartDate", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+
+        if (startDate.before(new Date())) {
+            JOptionPane.showMessageDialog(null, title + " cannot be a past date and needs to be a valid date in the format yyyy/mm/dd", "Invalid StartDate", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+
+        return startDate;
     }
 
     private void createExclusiveIncentiveGroups() {
