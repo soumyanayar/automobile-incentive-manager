@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.stream.Collectors;
 
 public class IncentiveManagerUI extends JFrame {
     private JPanel mainPanel;
@@ -27,6 +29,9 @@ public class IncentiveManagerUI extends JFrame {
     // Parameters related to Loan Type Incentive
     private double loanInterestRate;
     private int loanDurationInMonths;
+
+    // Parameters related to Rebate Type Incentive
+    private HashMap<String, Double> rebateMap;
 
     private JTextField startDateTextBox;
     private CalendarPanel startDateCalendarPanel;
@@ -157,7 +162,7 @@ public class IncentiveManagerUI extends JFrame {
 
         this.incentiveTypeSelected = IncentiveType.fromString(incentiveGroups.getSelection().getActionCommand());
 
-        switch(incentiveTypeSelected)
+        switch(this.incentiveTypeSelected)
         {
             case DISCOUNT -> {
                 boolean isCashCountParametersValid = validateAndParseCashDiscountIncentiveParameters();
@@ -174,7 +179,14 @@ public class IncentiveManagerUI extends JFrame {
                 }
             }
             case REBATE -> {
-                createRebateIncentiveInstance();
+                boolean isRebateIncentiveParametersValid = validateAndParseRebateIncentiveParameters();
+                if (isRebateIncentiveParametersValid) {
+                    String message = rebateMap.entrySet().stream()
+                            .map(e -> e.getKey() + "=" + e.getValue())
+                            .collect(Collectors.joining("&"));
+                    JOptionPane.showMessageDialog(null, message);
+                    tabbedPane.setSelectedComponent(inventoryPanel);
+                }
             }
             case LEASE -> {
                 createLeaseIncentiveInstance();
@@ -186,7 +198,34 @@ public class IncentiveManagerUI extends JFrame {
     private void createLeaseIncentiveInstance() {
     }
 
-    private void createRebateIncentiveInstance() {
+    private boolean validateAndParseRebateIncentiveParameters() {
+        rebateMap = new HashMap<>();
+        if (newGradRebateCheckBox.isSelected()) {
+            try {
+                double newGradRebateAmount = Double.parseDouble(newGradRebateTextBox.getText());
+                rebateMap.put("NewGradRebate", newGradRebateAmount);
+            } catch (NumberFormatException ne) {
+                JOptionPane.showMessageDialog(null, "Please enter valid number for the new grad incentive amount", "Invalid Rebate Incentive Amount", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        }
+
+        if (militaryRebateCheckBox.isSelected()) {
+            try {
+                double militaryRebateAmount = Double.parseDouble(militaryRebateTextBox.getText());
+                rebateMap.put("MilitaryVeteranRebate", militaryRebateAmount);
+            } catch (NumberFormatException ne) {
+                JOptionPane.showMessageDialog(null, "Please enter valid number for the military veteran incentive amount", "Invalid Rebate Incentive Amount", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        }
+
+        if (rebateMap.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please select atleast one type of Rebate incentive", "Invalid Rebate Incentive selection", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        return true;
     }
 
     private boolean validateAndParseLoanIncentiveParameters() {
