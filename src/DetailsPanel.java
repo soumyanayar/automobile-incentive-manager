@@ -86,7 +86,7 @@ public class DetailsPanel extends JPanel {
     }
 
     private void validateIncentiveDetailsAndCreateIncentiveInstance() {
-        Date startDate = validateAndParseDate(startDateTextBox.getText(), "Start Date");
+        /*Date startDate = validateAndParseDate(startDateTextBox.getText(), "Start Date");
         Date endDate = validateAndParseDate(endDateTextBox.getText(), "End Date");
         if (IncentiveDataValidator.isNull(startDate) || IncentiveDataValidator.isNull(endDate)) {
             return;
@@ -95,7 +95,9 @@ public class DetailsPanel extends JPanel {
         if (startDate.after(endDate)) {
             JOptionPane.showMessageDialog(null, "Start Date: "+ startDate + " cannot be after End Date: " + endDate, "Start Date greater than End Date", JOptionPane.ERROR_MESSAGE);
             return;
-        }
+        }*/
+
+        JOptionPane.showMessageDialog(null, incentiveGroups.getSelection().getActionCommand());
     }
 
     private Date validateAndParseDate(String date, String title) {
@@ -146,6 +148,7 @@ public class DetailsPanel extends JPanel {
         leaseSectionRadioButton = new JRadioButton("Lease Incentive");
         leaseSectionRadioButton.setFont(new Font("Lucida Grande", Font.BOLD, 15));
         leaseSectionRadioButton.setBounds(432, 271, 204, 23);
+        leaseSectionRadioButton.setActionCommand(String.valueOf(IncentiveType.LEASE));
         this.add(leaseSectionRadioButton);
 
         leaseMonthlyPaymentInDollarsLabel = new JLabel("Monthly Payment of ($)");
@@ -180,6 +183,7 @@ public class DetailsPanel extends JPanel {
         rebateSectionRadioButton = new JRadioButton("Rebate Incentive");
         rebateSectionRadioButton.setFont(new Font("Lucida Grande", Font.BOLD, 15));
         rebateSectionRadioButton.setBounds(427, 121, 204, 23);
+        rebateSectionRadioButton.setActionCommand(String.valueOf(IncentiveType.REBATE));
         this.add(rebateSectionRadioButton);
 
         newGradRebateCheckBox = new JCheckBox("Rebate for new Grads");
@@ -205,6 +209,7 @@ public class DetailsPanel extends JPanel {
         loanSectionRadioButton = new JRadioButton("Loan Incentive");
         loanSectionRadioButton.setFont(new Font("Lucida Grande", Font.BOLD, 15));
         loanSectionRadioButton.setBounds(68, 270, 204, 23);
+        loanSectionRadioButton.setActionCommand(String.valueOf(IncentiveType.LOAN));
         this.add(loanSectionRadioButton);
 
         interestRateLabel = new JLabel("Interest Rate (%)");
@@ -230,6 +235,7 @@ public class DetailsPanel extends JPanel {
         cashDicountSectionRadioButton = new JRadioButton("Discount Incentive");
         cashDicountSectionRadioButton.setFont(new Font("Lucida Grande", Font.BOLD, 15));
         cashDicountSectionRadioButton.setBounds(68, 121, 204, 23);
+        cashDicountSectionRadioButton.setActionCommand(String.valueOf(IncentiveType.DISCOUNT));
         this.add(cashDicountSectionRadioButton);
 
         flatRateDiscountRadioButton = new JRadioButton("$");
