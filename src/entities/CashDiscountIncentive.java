@@ -7,11 +7,11 @@ public class CashDiscountIncentive extends Incentive {
     private double value;
     private CashDiscountType cashDiscountType;
 
-    public CashDiscountIncentive(String id, String dealerId, Date startDate, Date endDate, String title,
-                                 String description, String disclaimer, List<PaymentType> validPaymentTypes,
-                                 CarCategory carCategory, String make, String model, String startYear,
-                                 String endYear, String thresholdMiles, double value, CashDiscountType cashDiscountType) {
-        super(id, dealerId, startDate, endDate, title, description, disclaimer, validPaymentTypes, carCategory, make,
+    public CashDiscountIncentive(String id, IncentiveType incentiveType, String dealerId, Date startDate, Date endDate,
+                                 String title, String description, String disclaimer, CarCategory carCategory,
+                                 String make, String model, String startYear, String endYear, String thresholdMiles,
+                                 double value, CashDiscountType cashDiscountType) {
+        super(id, incentiveType, dealerId, startDate, endDate, title, description, disclaimer, carCategory, make,
                 model, startYear, endYear, thresholdMiles);
         this.value = value;
         this.cashDiscountType = cashDiscountType;

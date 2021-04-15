@@ -62,19 +62,24 @@ public class IncentiveManagerUI extends JFrame {
         this.setContentPane(this.mainPanel);
         this.setBounds(100, 100, 897, 578);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         // this.pack();
 
         tabbedPane = new JTabbedPane();
         tabbedPane.setBackground(Color.black);
+
         detailsPanel = new JPanel();
         detailsPanel.setLayout(null);
         createDetailsPanelComponents();
-
         tabbedPane.addTab("Details", detailsPanel);
+
         inventoryPanel = new JPanel();
         tabbedPane.addTab("Inventory", inventoryPanel);
+
         descriptionPanel = new JPanel();
         tabbedPane.addTab("Description", descriptionPanel);
+
+        tabbedPane.setSelectedComponent(detailsPanel);
 
         mainPanel.add(tabbedPane);
         this.setVisible(true);

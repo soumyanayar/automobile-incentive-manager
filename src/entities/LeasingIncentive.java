@@ -8,11 +8,11 @@ public class LeasingIncentive extends Incentive{
     private double signingPay;
     private double monthlyPay;
 
-    public LeasingIncentive(String id, String dealerId, Date startDate, Date endDate, String title, String description,
-                            String disclaimer, List<PaymentType> validPaymentTypes, CarCategory carCategory, String make,
+    public LeasingIncentive(String id, IncentiveType incentiveType, String dealerId, Date startDate, Date endDate,
+                            String title, String description, String disclaimer, CarCategory carCategory, String make,
                             String model, String startYear, String endYear, String thresholdMiles, int months,
                             double signingPay, double monthlyPay) {
-        super(id, dealerId, startDate, endDate, title, description, disclaimer, validPaymentTypes, carCategory,
+        super(id, incentiveType, dealerId, startDate, endDate, title, description, disclaimer, carCategory,
                 make, model, startYear, endYear, thresholdMiles);
         this.months = months;
         this.signingPay = signingPay;

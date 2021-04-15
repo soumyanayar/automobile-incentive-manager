@@ -5,13 +5,13 @@ import java.util.List;
 
 public abstract class Incentive {
     private String id;
+    private IncentiveType incentiveType;
     private String dealerId;
     private Date startDate;
     private Date endDate;
     private String title;
     private String description;
     private String disclaimer;
-    private List<PaymentType> validPaymentTypes;
     private CarCategory carCategory;
     private String make;
     private String model;
@@ -19,17 +19,17 @@ public abstract class Incentive {
     private String endYear;
     private String thresholdMiles;
 
-    public Incentive(String id, String dealerId, Date startDate, Date endDate, String title, String description,
-                     String disclaimer, List<PaymentType> validPaymentTypes, CarCategory carCategory, String make,
+    public Incentive(String id, IncentiveType incentiveType, String dealerId, Date startDate, Date endDate, String title, String description,
+                     String disclaimer, CarCategory carCategory, String make,
                      String model, String startYear, String endYear, String thresholdMiles) {
         this.id = id;
+        this.incentiveType = incentiveType;
         this.dealerId = dealerId;
         this.startDate = startDate;
         this.endDate = endDate;
         this.title = title;
         this.description = description;
         this.disclaimer = disclaimer;
-        this.validPaymentTypes = validPaymentTypes;
         this.carCategory = carCategory;
         this.make = make;
         this.model = model;
@@ -44,6 +44,14 @@ public abstract class Incentive {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public IncentiveType getIncentiveType() {
+        return incentiveType;
+    }
+
+    public void getIncentiveType(IncentiveType incentiveType) {
+        this.incentiveType = incentiveType;
     }
 
     public String getDealerId() {
@@ -92,14 +100,6 @@ public abstract class Incentive {
 
     public void setDisclaimer(String disclaimer) {
         this.disclaimer = disclaimer;
-    }
-
-    public List<PaymentType> getValidPaymentTypes() {
-        return validPaymentTypes;
-    }
-
-    public void setValidPaymentTypes(List<PaymentType> validPaymentTypes) {
-        this.validPaymentTypes = validPaymentTypes;
     }
 
     public CarCategory getCarCategory() {
