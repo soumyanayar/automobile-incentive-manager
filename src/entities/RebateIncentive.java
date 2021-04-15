@@ -16,8 +16,8 @@ public class RebateIncentive extends Incentive{
     private HashMap<String, Double> rebateMap;
 
     public RebateIncentive(String id, IncentiveType incentiveType, String dealerId, Date startDate, Date endDate, String title, String description,
-                           String disclaimer, CarCategory carCategory, String startYear, String endYear, HashSet<String> carVINs, HashMap<String, Double> rebateMap) {
-        super(id, incentiveType, dealerId, startDate, endDate, title, description, disclaimer, carCategory, carVINs);
+                           String disclaimer, String startYear, String endYear, HashSet<String> carVINs, HashMap<String, Double> rebateMap) {
+        super(id, incentiveType, dealerId, startDate, endDate, title, description, disclaimer, carVINs);
         this.rebateMap = rebateMap;
     }
 }

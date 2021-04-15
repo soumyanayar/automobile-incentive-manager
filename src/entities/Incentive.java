@@ -14,11 +14,10 @@ public abstract class Incentive {
     private String title;
     private String description;
     private String disclaimer;
-    private CarCategory carCategory;
     private HashSet<String> carVINs;
 
     public Incentive(String id, IncentiveType incentiveType, String dealerId, Date startDate, Date endDate, String title, String description,
-                     String disclaimer, CarCategory carCategory, HashSet<String> carVINs) {
+                     String disclaimer, HashSet<String> carVINs) {
         this.id = id;
         this.incentiveType = incentiveType;
         this.dealerId = dealerId;
@@ -27,7 +26,6 @@ public abstract class Incentive {
         this.title = title;
         this.description = description;
         this.disclaimer = disclaimer;
-        this.carCategory = carCategory;
         this.carVINs = carVINs;
     }
 
@@ -93,14 +91,6 @@ public abstract class Incentive {
 
     public void setDisclaimer(String disclaimer) {
         this.disclaimer = disclaimer;
-    }
-
-    public CarCategory getCarCategory() {
-        return carCategory;
-    }
-
-    public void setCarCategory(CarCategory carCategory) {
-        this.carCategory = carCategory;
     }
 
     public void setIncentiveType(IncentiveType incentiveType) {
