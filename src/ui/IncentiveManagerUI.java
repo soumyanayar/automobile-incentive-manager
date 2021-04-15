@@ -17,7 +17,10 @@ public class IncentiveManagerUI extends JFrame {
     private JPanel inventoryPanel;
     private JPanel descriptionPanel;
 
-    IncentiveType incentiveTypeSelected;
+    private IncentiveType incentiveTypeSelected;
+    private CashDiscountType cashDiscountType;
+    private double discountPercentage;
+    private double discountFlatAmount;
 
     private JTextField startDateTextBox;
     private CalendarPanel startDateCalendarPanel;
@@ -151,7 +154,12 @@ public class IncentiveManagerUI extends JFrame {
         switch(incentiveTypeSelected)
         {
             case DISCOUNT -> {
-                createCashDiscountIncentiveInstance();
+                boolean isCashCountParametersValid = validateAndParseCashDiscountIncentiveParameters();
+                if (isCashCountParametersValid) {
+                    JOptionPane.showMessageDialog(null, this.incentiveTypeSelected + "\n" + this.cashDiscountType + "\n" + this.discountFlatAmount + "\n" + this.discountPercentage);
+                    tabbedPane.setSelectedComponent(inventoryPanel);
+                }
+
                 break;
             }
             case LOAN -> {
@@ -167,8 +175,6 @@ public class IncentiveManagerUI extends JFrame {
             }
             default -> JOptionPane.showMessageDialog(null, "Please select valid incentive Type", "Invalid Incentive type", JOptionPane.ERROR_MESSAGE);
         }
-
-        JOptionPane.showMessageDialog(null, incentiveGroups.getSelection().getActionCommand());
     }
 
     private void createLeaseIncentiveInstance() {
@@ -180,7 +186,51 @@ public class IncentiveManagerUI extends JFrame {
     private void createLoanIncentiveInstance() {
     }
 
-    private void createCashDiscountIncentiveInstance() {
+    private boolean validateAndParseCashDiscountIncentiveParameters() {
+        this.cashDiscountType = CashDiscountType.fromString(cashDiscountSelectionRadioButtonGroup.getSelection().getActionCommand());
+        if (cashDiscountType == null) {
+            JOptionPane.showMessageDialog(null, "Please select correct discount type", "Invalid Discount Type", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        switch (cashDiscountType) {
+            case PERCENTAGE -> {
+                try {
+                    this.discountPercentage = Double.parseDouble(percentageRateDiscountTextField.getText());
+                    if (discountPercentage < 0.0 || discountPercentage > 100.0) {
+                        this.discountPercentage = 0.0;
+                        JOptionPane.showMessageDialog(null, "Please enter valid percentage value between 0.0 to 100.0 in the discount percentage field", "Invalid Discount Percentage", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+                    this.discountFlatAmount = 0.0;
+                } catch (NumberFormatException ne) {
+                    JOptionPane.showMessageDialog(null, "Please enter valid percentage value between 0.0 to 100.0 in the discount percentage field", "Invalid Discount Percentage", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+
+                break;
+            }
+
+            case FLATAMOUNT -> {
+                try {
+                    this.discountFlatAmount = Double.parseDouble(flatRateDiscountTextField.getText());
+                    this.discountPercentage = 0.0;
+                } catch (NumberFormatException ne) {
+                    JOptionPane.showMessageDialog(null, "Please enter valid number for flat amount field", "Invalid Flat Amount", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+
+                break;
+            }
+
+            default -> {
+                JOptionPane.showMessageDialog(null, "Please select valid discount type", "Invalid Discount Type", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+
+        }
+
+        return true;
     }
 
     private Date validateAndParseDate(String date, String title) {
@@ -324,15 +374,18 @@ public class IncentiveManagerUI extends JFrame {
 
         flatRateDiscountRadioButton = new JRadioButton("$");
         flatRateDiscountRadioButton.setBounds(107, 156, 50, 23);
+        flatRateDiscountRadioButton.setActionCommand(String.valueOf(CashDiscountType.FLATAMOUNT));
         detailsPanel.add(flatRateDiscountRadioButton);
 
         percentageRateDiscountRadioButton = new JRadioButton("%");
         percentageRateDiscountRadioButton.setBounds(107, 191, 42, 23);
+        percentageRateDiscountRadioButton.setActionCommand(String.valueOf(CashDiscountType.PERCENTAGE));
         detailsPanel.add(percentageRateDiscountRadioButton);
 
         cashDiscountSelectionRadioButtonGroup = new ButtonGroup();
         cashDiscountSelectionRadioButtonGroup.add(flatRateDiscountRadioButton);
         cashDiscountSelectionRadioButtonGroup.add(percentageRateDiscountRadioButton);
+        flatRateDiscountRadioButton.setSelected(true);
 
         flatRateDiscountTextField = new JTextField();
         flatRateDiscountTextField.setBounds(161, 156, 75, 26);
