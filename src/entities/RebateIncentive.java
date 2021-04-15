@@ -2,6 +2,7 @@ package entities;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class RebateIncentive extends Incentive{
     public HashMap<String, Double> getRebateMap() {
@@ -15,9 +16,8 @@ public class RebateIncentive extends Incentive{
     private HashMap<String, Double> rebateMap;
 
     public RebateIncentive(String id, IncentiveType incentiveType, String dealerId, Date startDate, Date endDate, String title, String description,
-                           String disclaimer, CarCategory carCategory, String make,
-                           String model, String startYear, String endYear, String thresholdMiles, HashMap<String, Double> rebateMap) {
-        super(id, incentiveType, dealerId, startDate, endDate, title, description, disclaimer, carCategory, make, model, startYear, endYear, thresholdMiles);
+                           String disclaimer, CarCategory carCategory, String startYear, String endYear, HashSet<String> carVINs, HashMap<String, Double> rebateMap) {
+        super(id, incentiveType, dealerId, startDate, endDate, title, description, disclaimer, carCategory, carVINs);
         this.rebateMap = rebateMap;
     }
 }

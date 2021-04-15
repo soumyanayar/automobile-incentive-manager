@@ -1,6 +1,8 @@
 package entities;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 public abstract class Incentive {
@@ -13,15 +15,10 @@ public abstract class Incentive {
     private String description;
     private String disclaimer;
     private CarCategory carCategory;
-    private String make;
-    private String model;
-    private String startYear;
-    private String endYear;
-    private String thresholdMiles;
+    private HashSet<String> carVINs;
 
     public Incentive(String id, IncentiveType incentiveType, String dealerId, Date startDate, Date endDate, String title, String description,
-                     String disclaimer, CarCategory carCategory, String make,
-                     String model, String startYear, String endYear, String thresholdMiles) {
+                     String disclaimer, CarCategory carCategory, HashSet<String> carVINs) {
         this.id = id;
         this.incentiveType = incentiveType;
         this.dealerId = dealerId;
@@ -31,11 +28,7 @@ public abstract class Incentive {
         this.description = description;
         this.disclaimer = disclaimer;
         this.carCategory = carCategory;
-        this.make = make;
-        this.model = model;
-        this.startYear = startYear;
-        this.endYear = endYear;
-        this.thresholdMiles = thresholdMiles;
+        this.carVINs = carVINs;
     }
 
     public String getId() {
@@ -110,43 +103,15 @@ public abstract class Incentive {
         this.carCategory = carCategory;
     }
 
-    public String getMake() {
-        return make;
+    public void setIncentiveType(IncentiveType incentiveType) {
+        this.incentiveType = incentiveType;
     }
 
-    public void setMake(String make) {
-        this.make = make;
+    public HashSet<String> getCarVINList() {
+        return carVINs;
     }
 
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
-
-    public String getStartYear() {
-        return startYear;
-    }
-
-    public void setStartYear(String startYear) {
-        this.startYear = startYear;
-    }
-
-    public String getEndYear() {
-        return endYear;
-    }
-
-    public void setEndYear(String endYear) {
-        this.endYear = endYear;
-    }
-
-    public String getThresholdMiles() {
-        return thresholdMiles;
-    }
-
-    public void setThresholdMiles(String thresholdMiles) {
-        this.thresholdMiles = thresholdMiles;
+    public void setCarVINList(HashSet<String> carVINs) {
+        this.carVINs = carVINs;
     }
 }

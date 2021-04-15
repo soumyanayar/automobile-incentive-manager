@@ -1,6 +1,7 @@
 package entities;
 
 import java.util.Date;
+import java.util.HashSet;
 
 public class CashDiscountIncentive extends Incentive {
     private double value;
@@ -8,10 +9,8 @@ public class CashDiscountIncentive extends Incentive {
 
     public CashDiscountIncentive(String id, IncentiveType incentiveType, String dealerId, Date startDate, Date endDate,
                                  String title, String description, String disclaimer, CarCategory carCategory,
-                                 String make, String model, String startYear, String endYear, String thresholdMiles,
-                                 double value, CashDiscountType cashDiscountType) {
-        super(id, incentiveType, dealerId, startDate, endDate, title, description, disclaimer, carCategory, make,
-                model, startYear, endYear, thresholdMiles);
+                                 HashSet<String> carVINs, double value, CashDiscountType cashDiscountType) {
+        super(id, incentiveType, dealerId, startDate, endDate, title, description, disclaimer, carCategory, carVINs);
         this.value = value;
         this.cashDiscountType = cashDiscountType;
     }
