@@ -133,6 +133,22 @@ public class IncentiveManagerUI extends JFrame {
         addButtonClickActionListenerToNextButton();
 
         addButtonClickActionListenerToCancelButton();
+
+        // Default behaviour
+        if (cashDicountSectionRadioButton.isSelected()) {
+            enableCashDiscountGroup();
+
+            // Default behavior in Cash Discount group
+            flatRateDiscountRadioButton.setSelected(true);
+            flatRateDiscountTextField.setEnabled(true);
+            flatRateDiscountTextField.setText("");
+            percentageRateDiscountTextField.setText("");
+            percentageRateDiscountTextField.setEnabled(false);
+
+            disableLoanGroup();
+            disableLeaseGroup();
+            disableRebateGroup();
+        }
     }
 
     private void addButtonClickActionListenerToCancelButton() {
@@ -391,6 +407,24 @@ public class IncentiveManagerUI extends JFrame {
         detailsPanel.add(detailsPageNextButton);
     }
 
+    public void enableLeaseGroup() {
+        leaseMonthlyPaymentInDollarsTextBox.setText("");
+        leaseMonthlyPaymentInDollarsTextBox.setEnabled(true);
+        leaseDurationInMonthsTextBox.setText("");
+        leaseDurationInMonthsTextBox.setEnabled(true);
+        leaseSigningAmountTextBox.setText("");
+        leaseSigningAmountTextBox.setEnabled(true);
+    }
+
+    public void disableLeaseGroup() {
+        leaseMonthlyPaymentInDollarsTextBox.setText("");
+        leaseMonthlyPaymentInDollarsTextBox.setEnabled(false);
+        leaseDurationInMonthsTextBox.setText("");
+        leaseDurationInMonthsTextBox.setEnabled(false);
+        leaseSigningAmountTextBox.setText("");
+        leaseSigningAmountTextBox.setEnabled(false);
+    }
+
     private void createLeaseIncentiveComponents() {
         leaseSectionRadioButton = new JRadioButton("Lease Incentive");
         leaseSectionRadioButton.setFont(new Font("Lucida Grande", Font.BOLD, 15));
@@ -424,6 +458,39 @@ public class IncentiveManagerUI extends JFrame {
         leaseSigningAmountTextBox.setColumns(10);
         leaseSigningAmountTextBox.setBounds(621, 355, 56, 26);
         detailsPanel.add(leaseSigningAmountTextBox);
+
+        leaseSectionRadioButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (leaseSectionRadioButton.isSelected()) {
+                    enableLeaseGroup();
+                    disableCashDiscountGroup();
+                    disableLoanGroup();
+                    disableRebateGroup();
+                }
+            }
+        });
+    }
+
+    public void enableRebateGroup() {
+        newGradRebateCheckBox.setSelected(false);
+        newGradRebateCheckBox.setEnabled(true);
+        militaryRebateCheckBox.setSelected(false);
+        militaryRebateCheckBox.setEnabled(true);
+        newGradRebateTextBox.setEnabled(true);
+        newGradRebateTextBox.setText("");
+        militaryRebateTextBox.setEnabled(true);
+        militaryRebateTextBox.setText("");
+    }
+
+    public void disableRebateGroup() {
+        newGradRebateCheckBox.setSelected(false);
+        newGradRebateCheckBox.setEnabled(false);
+        militaryRebateCheckBox.setSelected(false);
+        militaryRebateCheckBox.setEnabled(false);
+        newGradRebateTextBox.setEnabled(false);
+        newGradRebateTextBox.setText("");
+        militaryRebateTextBox.setEnabled(false);
+        militaryRebateTextBox.setText("");
     }
 
     private void createRebateIncentiveComponents() {
@@ -450,6 +517,31 @@ public class IncentiveManagerUI extends JFrame {
         militaryRebateTextBox.setColumns(10);
         militaryRebateTextBox.setBounds(688, 190, 63, 26);
         detailsPanel.add(militaryRebateTextBox);
+
+        rebateSectionRadioButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (rebateSectionRadioButton.isSelected()) {
+                    enableRebateGroup();
+                    disableCashDiscountGroup();
+                    disableLoanGroup();
+                    disableLeaseGroup();
+                }
+            }
+        });
+    }
+
+    public void disableLoanGroup() {
+        interestRateTextField.setText("");
+        interestRateTextField.setEnabled(false);
+        loanDurationInMonthsTextField.setText("");
+        loanDurationInMonthsTextField.setEnabled(false);
+    }
+
+    public void enableLoanGroup() {
+        interestRateTextField.setText("");
+        interestRateTextField.setEnabled(true);
+        loanDurationInMonthsTextField.setText("");
+        loanDurationInMonthsTextField.setEnabled(true);
     }
 
     private void createLoanIncentiveComponents() {
@@ -476,6 +568,38 @@ public class IncentiveManagerUI extends JFrame {
         loanDurationInMonthsTextField.setColumns(10);
         loanDurationInMonthsTextField.setBounds(238, 327, 50, 26);
         detailsPanel.add(loanDurationInMonthsTextField);
+
+        loanSectionRadioButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (loanSectionRadioButton.isSelected()) {
+                    enableLoanGroup();
+                    disableCashDiscountGroup();
+                    disableLeaseGroup();
+                    disableRebateGroup();
+                }
+            }
+        });
+    }
+
+    public void enableCashDiscountGroup() {
+        flatRateDiscountRadioButton.setSelected(true);
+        flatRateDiscountRadioButton.setEnabled(true);
+        percentageRateDiscountRadioButton.setEnabled(true);
+        flatRateDiscountTextField.setText("");
+        flatRateDiscountTextField.setEnabled(true);
+        percentageRateDiscountTextField.setText("");
+        percentageRateDiscountTextField.setEnabled(true);
+    }
+
+    public void disableCashDiscountGroup() {
+        flatRateDiscountRadioButton.setSelected(false);
+        flatRateDiscountRadioButton.setEnabled(false);
+        percentageRateDiscountRadioButton.setSelected(false);
+        percentageRateDiscountRadioButton.setEnabled(false);
+        flatRateDiscountTextField.setText("");
+        flatRateDiscountTextField.setEnabled(false);
+        percentageRateDiscountTextField.setText("");
+        percentageRateDiscountTextField.setEnabled(false);
     }
 
     private void createCashDiscountIncentiveComponents() {
@@ -499,7 +623,7 @@ public class IncentiveManagerUI extends JFrame {
         cashDiscountSelectionRadioButtonGroup = new ButtonGroup();
         cashDiscountSelectionRadioButtonGroup.add(flatRateDiscountRadioButton);
         cashDiscountSelectionRadioButtonGroup.add(percentageRateDiscountRadioButton);
-        flatRateDiscountRadioButton.setSelected(true);
+
 
         flatRateDiscountTextField = new JTextField();
         flatRateDiscountTextField.setBounds(161, 156, 75, 26);
@@ -510,6 +634,40 @@ public class IncentiveManagerUI extends JFrame {
         percentageRateDiscountTextField.setColumns(10);
         percentageRateDiscountTextField.setBounds(161, 188, 75, 26);
         detailsPanel.add(percentageRateDiscountTextField);
+
+        cashDicountSectionRadioButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (cashDicountSectionRadioButton.isSelected()) {
+                    enableCashDiscountGroup();
+                    disableLoanGroup();
+                    disableLeaseGroup();
+                    disableRebateGroup();
+                }
+            }
+        });
+
+        flatRateDiscountRadioButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (flatRateDiscountRadioButton.isSelected()) {
+                    flatRateDiscountTextField.setEnabled(true);
+                    flatRateDiscountTextField.setText("");
+                    percentageRateDiscountTextField.setText("");
+                    percentageRateDiscountTextField.setEnabled(false);
+                }
+            }
+        });
+
+        percentageRateDiscountRadioButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (percentageRateDiscountRadioButton.isSelected()) {
+                    percentageRateDiscountTextField.setText("");
+                    percentageRateDiscountTextField.setEnabled(true);
+                    flatRateDiscountTextField.setText("");
+                    flatRateDiscountTextField.setEnabled(false);
+                }
+            }
+        });
+
     }
 
     private void createStartDateComponents() {
