@@ -1,7 +1,6 @@
 package entities;
 
 import java.util.Date;
-import java.util.List;
 
 public class CashDiscountIncentive extends Incentive {
     private double value;
