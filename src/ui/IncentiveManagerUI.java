@@ -159,16 +159,12 @@ public class IncentiveManagerUI extends JFrame {
                     JOptionPane.showMessageDialog(null, this.incentiveTypeSelected + "\n" + this.cashDiscountType + "\n" + this.discountFlatAmount + "\n" + this.discountPercentage);
                     tabbedPane.setSelectedComponent(inventoryPanel);
                 }
-
-                break;
             }
             case LOAN -> {
                 createLoanIncentiveInstance();
-                break;
             }
             case REBATE -> {
                 createRebateIncentiveInstance();
-                break;
             }
             case LEASE -> {
                 createLeaseIncentiveInstance();
@@ -207,8 +203,6 @@ public class IncentiveManagerUI extends JFrame {
                     JOptionPane.showMessageDialog(null, "Please enter valid percentage value between 0.0 to 100.0 in the discount percentage field", "Invalid Discount Percentage", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
-
-                break;
             }
 
             case FLATAMOUNT -> {
@@ -219,15 +213,12 @@ public class IncentiveManagerUI extends JFrame {
                     JOptionPane.showMessageDialog(null, "Please enter valid number for flat amount field", "Invalid Flat Amount", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
-
-                break;
             }
 
             default -> {
                 JOptionPane.showMessageDialog(null, "Please select valid discount type", "Invalid Discount Type", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
-
         }
 
         return true;
