@@ -18,9 +18,15 @@ public class IncentiveManagerUI extends JFrame {
     private JPanel descriptionPanel;
 
     private IncentiveType incentiveTypeSelected;
+
+    // Parameters related to Discount Type Incentive
     private CashDiscountType cashDiscountType;
     private double discountPercentage;
     private double discountFlatAmount;
+
+    // Parameters related to Loan Type Incentive
+    private double loanInterestRate;
+    private int loanDurationInMonths;
 
     private JTextField startDateTextBox;
     private CalendarPanel startDateCalendarPanel;
@@ -161,7 +167,11 @@ public class IncentiveManagerUI extends JFrame {
                 }
             }
             case LOAN -> {
-                createLoanIncentiveInstance();
+                boolean isLoanIncentiveParametersValid = validateAndParseLoanIncentiveParameters();
+                if (isLoanIncentiveParametersValid) {
+                    JOptionPane.showMessageDialog(null, this.loanInterestRate + "\n" + this.loanDurationInMonths);
+                    tabbedPane.setSelectedComponent(inventoryPanel);
+                }
             }
             case REBATE -> {
                 createRebateIncentiveInstance();
@@ -179,7 +189,34 @@ public class IncentiveManagerUI extends JFrame {
     private void createRebateIncentiveInstance() {
     }
 
-    private void createLoanIncentiveInstance() {
+    private boolean validateAndParseLoanIncentiveParameters() {
+        try {
+            this.loanInterestRate = Double.parseDouble(interestRateTextField.getText());
+            if (this.loanInterestRate < 0.0 || this.loanInterestRate > 100.0) {
+                JOptionPane.showMessageDialog(null, "Please enter valid interest rate value between 0.0 to 100.0 in the loan interest field", "Invalid Loan Interest Rate", JOptionPane.ERROR_MESSAGE);
+                this.loanInterestRate = 0.0;
+                this.loanDurationInMonths = 0;
+                return false;
+            }
+        } catch (NumberFormatException ne) {
+            JOptionPane.showMessageDialog(null, "Please enter correct loan interest rate", "Invalid Loan Interest Rate", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        try {
+            this.loanDurationInMonths = Integer.parseInt(loanDurationInMonthsTextField.getText());
+            if (this.loanDurationInMonths <= 0 || this.loanDurationInMonths > 72) {
+                JOptionPane.showMessageDialog(null, "Please enter valid loan duration in months between 1-72 months in the loan duration field", "Invalid Loan Duration in months", JOptionPane.ERROR_MESSAGE);
+                this.loanInterestRate = 0.0;
+                this.loanDurationInMonths = 0;
+                return false;
+            }
+        } catch (NumberFormatException ne) {
+            JOptionPane.showMessageDialog(null, "Please enter correct loan duration months", "Invalid Loan Interest Rate", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        return true;
     }
 
     private boolean validateAndParseCashDiscountIncentiveParameters() {
