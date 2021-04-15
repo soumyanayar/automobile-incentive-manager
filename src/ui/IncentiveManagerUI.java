@@ -200,8 +200,10 @@ public class IncentiveManagerUI extends JFrame {
                 if (isLeaseIncentiveParametersValid) {
                     String message = this.incentiveTypeSelected + "\n" + this.leaseDurationInMonths + "\n" + this.leaseSigningAmount + "\n" + this.leaseMonthlyPayment;
                     JOptionPane.showMessageDialog(null, message);
+                    tabbedPane.setSelectedComponent(inventoryPanel);
                 }
             }
+
             default -> JOptionPane.showMessageDialog(null, "Please select valid incentive Type", "Invalid Incentive type", JOptionPane.ERROR_MESSAGE);
         }
     }
