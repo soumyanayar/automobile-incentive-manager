@@ -33,6 +33,11 @@ public class IncentiveManagerUI extends JFrame {
     // Parameters related to Rebate Type Incentive
     private HashMap<String, Double> rebateMap;
 
+    // Parameters related to Lease Type Incentive
+    private int leaseDurationInMonths;
+    private double leaseSigningAmount;
+    private double leaseMonthlyPayment;
+
     private JTextField startDateTextBox;
     private CalendarPanel startDateCalendarPanel;
     private JLabel startDateLabel;
@@ -167,21 +172,23 @@ public class IncentiveManagerUI extends JFrame {
             case DISCOUNT -> {
                 boolean isCashCountParametersValid = validateAndParseCashDiscountIncentiveParameters();
                 if (isCashCountParametersValid) {
-                    JOptionPane.showMessageDialog(null, this.incentiveTypeSelected + "\n" + this.cashDiscountType + "\n" + this.discountFlatAmount + "\n" + this.discountPercentage);
+                    String message = this.incentiveTypeSelected + "\n" + this.cashDiscountType + "\n" + this.discountFlatAmount + "\n" + this.discountPercentage;
+                    JOptionPane.showMessageDialog(null, message);
                     tabbedPane.setSelectedComponent(inventoryPanel);
                 }
             }
             case LOAN -> {
                 boolean isLoanIncentiveParametersValid = validateAndParseLoanIncentiveParameters();
                 if (isLoanIncentiveParametersValid) {
-                    JOptionPane.showMessageDialog(null, this.loanInterestRate + "\n" + this.loanDurationInMonths);
+                    String message = this.incentiveTypeSelected + "\n" + this.loanInterestRate + "\n" + this.loanDurationInMonths;
+                    JOptionPane.showMessageDialog(null, message);
                     tabbedPane.setSelectedComponent(inventoryPanel);
                 }
             }
             case REBATE -> {
                 boolean isRebateIncentiveParametersValid = validateAndParseRebateIncentiveParameters();
                 if (isRebateIncentiveParametersValid) {
-                    String message = rebateMap.entrySet().stream()
+                    String message = this.incentiveTypeSelected + rebateMap.entrySet().stream()
                             .map(e -> e.getKey() + "=" + e.getValue())
                             .collect(Collectors.joining("&"));
                     JOptionPane.showMessageDialog(null, message);
@@ -189,13 +196,51 @@ public class IncentiveManagerUI extends JFrame {
                 }
             }
             case LEASE -> {
-                createLeaseIncentiveInstance();
+                boolean isLeaseIncentiveParametersValid = validateAndParseLeaseIncentiveParameters();
+                if (isLeaseIncentiveParametersValid) {
+                    String message = this.incentiveTypeSelected + "\n" + this.leaseDurationInMonths + "\n" + this.leaseSigningAmount + "\n" + this.leaseMonthlyPayment;
+                    JOptionPane.showMessageDialog(null, message);
+                }
             }
             default -> JOptionPane.showMessageDialog(null, "Please select valid incentive Type", "Invalid Incentive type", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    private void createLeaseIncentiveInstance() {
+    private boolean validateAndParseLeaseIncentiveParameters() {
+        try {
+            this.leaseDurationInMonths = Integer.parseInt(leaseDurationInMonthsTextBox.getText());
+            if (this.leaseDurationInMonths <= 0 || this.leaseDurationInMonths > 72) {
+                JOptionPane.showMessageDialog(null,"Please enter valid number of months for the lease duration (1-72)", "Invalid lease duration",JOptionPane.ERROR_MESSAGE);
+                this.leaseSigningAmount = 0.0;
+                this.leaseMonthlyPayment = 0.0;
+                return false;
+            }
+        } catch (NumberFormatException ne) {
+            JOptionPane.showMessageDialog(null,"Please enter valid number of months for the lease duration", "Invalid lease duration",JOptionPane.ERROR_MESSAGE);
+            this.leaseSigningAmount = 0.0;
+            this.leaseMonthlyPayment = 0.0;
+            return false;
+        }
+
+        try {
+            this.leaseSigningAmount = Double.parseDouble(leaseSigningAmountTextBox.getText());
+        } catch (NumberFormatException ne) {
+            JOptionPane.showMessageDialog(null,"Please enter valid number for lease signing amount", "Invalid lease signing amount",JOptionPane.ERROR_MESSAGE);
+            this.leaseDurationInMonths = 0;
+            this.leaseMonthlyPayment = 0.0;
+            return false;
+        }
+
+        try {
+            this.leaseMonthlyPayment = Double.parseDouble(leaseMonthlyPaymentInDollarsTextBox.getText());
+        } catch (NumberFormatException ne) {
+            JOptionPane.showMessageDialog(null,"Please enter valid number of for monthly lease payment", "Invalid monthly lease payment",JOptionPane.ERROR_MESSAGE);
+            this.leaseDurationInMonths = 0;
+            this.leaseSigningAmount = 0.0;
+            return false;
+        }
+
+        return true;
     }
 
     private boolean validateAndParseRebateIncentiveParameters() {
