@@ -1,5 +1,8 @@
+package ui;
+
+import entities.*;
+
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 
 public class IncentiveManagerUI extends JFrame {
@@ -18,11 +21,11 @@ public class IncentiveManagerUI extends JFrame {
 
         tabbedPane = new JTabbedPane();
         tabbedPane.setBackground(Color.black);
-        JComponent detailsPanel = new DetailsPanel();
+        DetailsPanel detailsPanel = new DetailsPanel();
         tabbedPane.addTab("Details", detailsPanel);
-        JComponent inventoryPanel = new InventoryPanel();
+        InventoryPanel inventoryPanel = new InventoryPanel();
         tabbedPane.addTab("Inventory", inventoryPanel);
-        JComponent descriptionPanel = new DescriptionPanel();
+        DescriptionPanel descriptionPanel = new DescriptionPanel();
         tabbedPane.addTab("Description", descriptionPanel);
 
         mainPanel.add(tabbedPane);

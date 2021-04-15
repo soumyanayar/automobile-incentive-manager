@@ -1,3 +1,5 @@
+package validators;
+
 import java.util.regex.Pattern;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
@@ -40,7 +42,7 @@ public class IncentiveDataValidator {
             return false;
     }
 
-    protected static Date parseDateFromString(String strDate) throws ParseException {
+    public static Date parseDateFromString(String strDate) throws ParseException {
         String[] time = strDate.split("/");
 
         if (time.length != 3)

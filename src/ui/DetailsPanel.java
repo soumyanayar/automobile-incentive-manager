@@ -1,12 +1,20 @@
+package ui;
+
+import entities.Incentive;
+import entities.IncentiveType;
+import entities.LeasingIncentive;
+import validators.IncentiveDataValidator;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
-import java.util.Calendar;
 import java.util.Date;
 
 public class DetailsPanel extends JPanel {
+    IncentiveType incentiveTypeSelected;
+
     private JTextField startDateTextBox;
     private CalendarPanel startDateCalendarPanel;
     private JLabel startDateLabel;
@@ -75,6 +83,17 @@ public class DetailsPanel extends JPanel {
         this.createExclusiveIncentiveGroups();
 
         addButtonClickActionListenerToNextButton();
+
+        addButtonClickActionListenerToCancelButton();
+    }
+
+    private void addButtonClickActionListenerToCancelButton() {
+        detailsPageCancelButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Change later
+                System.exit(0);
+            }
+        });
     }
 
     private void addButtonClickActionListenerToNextButton() {
@@ -86,8 +105,9 @@ public class DetailsPanel extends JPanel {
     }
 
     private void validateIncentiveDetailsAndCreateIncentiveInstance() {
-        /*Date startDate = validateAndParseDate(startDateTextBox.getText(), "Start Date");
+        Date startDate = validateAndParseDate(startDateTextBox.getText(), "Start Date");
         Date endDate = validateAndParseDate(endDateTextBox.getText(), "End Date");
+
         if (IncentiveDataValidator.isNull(startDate) || IncentiveDataValidator.isNull(endDate)) {
             return;
         }
@@ -95,9 +115,43 @@ public class DetailsPanel extends JPanel {
         if (startDate.after(endDate)) {
             JOptionPane.showMessageDialog(null, "Start Date: "+ startDate + " cannot be after End Date: " + endDate, "Start Date greater than End Date", JOptionPane.ERROR_MESSAGE);
             return;
-        }*/
+        }
+
+        this.incentiveTypeSelected = IncentiveType.fromString(incentiveGroups.getSelection().getActionCommand());
+
+        switch(incentiveTypeSelected)
+        {
+            case DISCOUNT -> {
+                createCashDiscountIncentiveInstance();
+                break;
+            }
+            case LOAN -> {
+                createLoanIncentiveInstance();
+                break;
+            }
+            case REBATE -> {
+                createRebateIncentiveInstance();
+                break;
+            }
+            case LEASE -> {
+                createLeaseIncentiveInstance();
+            }
+            default -> JOptionPane.showMessageDialog(null, "Please select valid incentive Type", "Invalid Incentive type", JOptionPane.ERROR_MESSAGE);
+        }
 
         JOptionPane.showMessageDialog(null, incentiveGroups.getSelection().getActionCommand());
+    }
+
+    private void createLeaseIncentiveInstance() {
+    }
+
+    private void createRebateIncentiveInstance() {
+    }
+
+    private void createLoanIncentiveInstance() {
+    }
+
+    private void createCashDiscountIncentiveInstance() {
     }
 
     private Date validateAndParseDate(String date, String title) {
@@ -236,6 +290,7 @@ public class DetailsPanel extends JPanel {
         cashDicountSectionRadioButton.setFont(new Font("Lucida Grande", Font.BOLD, 15));
         cashDicountSectionRadioButton.setBounds(68, 121, 204, 23);
         cashDicountSectionRadioButton.setActionCommand(String.valueOf(IncentiveType.DISCOUNT));
+        cashDicountSectionRadioButton.setSelected(true);
         this.add(cashDicountSectionRadioButton);
 
         flatRateDiscountRadioButton = new JRadioButton("$");
