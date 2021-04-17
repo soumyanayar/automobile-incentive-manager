@@ -85,7 +85,14 @@ public class IncentiveManagerUI extends JFrame {
     private JLabel yearsBetweenAndLabel;
     private JLabel yearsBetweenLabel;
     private JComboBox<String> fromYearsComboBox;
-    private JComboBox<Object> toYearsComboBox;
+    private JComboBox<String> toYearsComboBox;
+
+    private JLabel makeFilterLabel;
+    private JComboBox<String> makeFilterComboBox;
+
+    private JLabel modelFilterLabel;
+    private JComboBox<String> modelFilterComboBox;
+
 
     public IncentiveManagerUI() {
         this.setTitle("Create Incentive");
@@ -172,6 +179,37 @@ public class IncentiveManagerUI extends JFrame {
 
         // Create the components related to year filter
         createYearsFilterComponents();
+
+        // Create the components related to make filter
+        createMakeFilterComponents();
+
+        // Create the components related to model filter
+        createModelFilerComponents();
+    }
+
+    private void createModelFilerComponents() {
+        modelFilterLabel = new JLabel("Model");
+        modelFilterLabel.setBounds(73, 182, 61, 16);
+        modelFilterLabel.setFont(new Font("Dialog", Font.BOLD, 12));
+        inventoryPanel.add(modelFilterLabel);
+
+        modelFilterComboBox = new JComboBox<>();
+        modelFilterComboBox.setModel(new DefaultComboBoxModel(new String[] {"All Models", "528i", "328i", "Eldorado", "Escalade", "TL", "323i"}));
+        modelFilterComboBox.setBounds(167, 182, 130, 27);
+        inventoryPanel.add(modelFilterComboBox);
+    }
+
+    private void createMakeFilterComponents() {
+        makeFilterLabel = new JLabel("Make");
+        makeFilterLabel.setBounds(73, 139, 61, 16);
+        makeFilterLabel.setFont(new Font("Dialog", Font.BOLD, 12));
+        inventoryPanel.add(makeFilterLabel);
+
+        // Make This Dynamic
+        makeFilterComboBox = new JComboBox<>();
+        makeFilterComboBox.setModel(new DefaultComboBoxModel(new String[] {"All Makes", "BMW", "Cadillac", "Acura", "Audi", "Buick", "Chevrolet"}));
+        makeFilterComboBox.setBounds(167, 135, 130, 27);
+        inventoryPanel.add(makeFilterComboBox);
     }
 
     private void createYearsFilterComponents() {
@@ -511,7 +549,7 @@ public class IncentiveManagerUI extends JFrame {
 
     private void createLeaseIncentiveComponents() {
         leaseSectionRadioButton = new JRadioButton("Lease Incentive");
-        leaseSectionRadioButton.setFont(new Font("Lucida Grande", Font.BOLD, 15));
+        leaseSectionRadioButton.setFont(new Font("Dialog", Font.BOLD, 14));
         leaseSectionRadioButton.setBounds(432, 271, 204, 23);
         leaseSectionRadioButton.setActionCommand(String.valueOf(IncentiveType.LEASE));
         detailsPanel.add(leaseSectionRadioButton);
@@ -579,7 +617,7 @@ public class IncentiveManagerUI extends JFrame {
 
     private void createRebateIncentiveComponents() {
         rebateSectionRadioButton = new JRadioButton("Rebate Incentive");
-        rebateSectionRadioButton.setFont(new Font("Lucida Grande", Font.BOLD, 15));
+        rebateSectionRadioButton.setFont(new Font("Dialog", Font.BOLD, 14));
         rebateSectionRadioButton.setBounds(427, 121, 204, 23);
         rebateSectionRadioButton.setActionCommand(String.valueOf(IncentiveType.REBATE));
         detailsPanel.add(rebateSectionRadioButton);
@@ -630,7 +668,7 @@ public class IncentiveManagerUI extends JFrame {
 
     private void createLoanIncentiveComponents() {
         loanSectionRadioButton = new JRadioButton("Loan Incentive");
-        loanSectionRadioButton.setFont(new Font("Lucida Grande", Font.BOLD, 15));
+        loanSectionRadioButton.setFont(new Font("Dialog", Font.BOLD, 14));
         loanSectionRadioButton.setBounds(68, 270, 204, 23);
         loanSectionRadioButton.setActionCommand(String.valueOf(IncentiveType.LOAN));
         detailsPanel.add(loanSectionRadioButton);
@@ -688,7 +726,7 @@ public class IncentiveManagerUI extends JFrame {
 
     private void createCashDiscountIncentiveComponents() {
         cashDicountSectionRadioButton = new JRadioButton("Discount Incentive");
-        cashDicountSectionRadioButton.setFont(new Font("Lucida Grande", Font.BOLD, 15));
+        cashDicountSectionRadioButton.setFont(new Font("Dialog", Font.BOLD, 14));
         cashDicountSectionRadioButton.setBounds(68, 121, 204, 23);
         cashDicountSectionRadioButton.setActionCommand(String.valueOf(IncentiveType.DISCOUNT));
         cashDicountSectionRadioButton.setSelected(true);
