@@ -8,8 +8,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
+import java.time.Year;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Vector;
 import java.util.stream.Collectors;
 
 public class IncentiveManagerUI extends JFrame {
@@ -74,6 +76,17 @@ public class IncentiveManagerUI extends JFrame {
 
     private ButtonGroup incentiveGroups;
 
+    private JLabel carCategoryLabel;
+    private JComboBox<String> category;
+
+    private JLabel vinLabel;
+    private JTextField vinTextBox;
+
+    private JLabel yearsBetweenAndLabel;
+    private JLabel yearsBetweenLabel;
+    private JComboBox<String> fromYearsComboBox;
+    private JComboBox<Object> toYearsComboBox;
+
     public IncentiveManagerUI() {
         this.setTitle("Create Incentive");
 
@@ -91,6 +104,8 @@ public class IncentiveManagerUI extends JFrame {
         tabbedPane.addTab("Details", detailsPanel);
 
         inventoryPanel = new JPanel();
+        inventoryPanel.setLayout(null);
+        createIncentivePanelComponents();
         tabbedPane.addTab("Inventory", inventoryPanel);
 
         descriptionPanel = new JPanel();
@@ -147,6 +162,78 @@ public class IncentiveManagerUI extends JFrame {
             disableRebateGroup();
         }
     }
+
+    private void createIncentivePanelComponents() {
+        // Create the components related to Category Filter
+        createCarCategoryComponents();
+
+        // Create the components related to VIN Filter
+        createVINFilterComponents();
+
+        // Create the components related to year filter
+        createYearsFilterComponents();
+    }
+
+    private void createYearsFilterComponents() {
+        yearsBetweenLabel = new JLabel("Years from");
+        yearsBetweenLabel.setBounds(73, 97, 82, 16);
+        yearsBetweenLabel.setFont(new Font("Dialog", Font.BOLD, 12));
+        inventoryPanel.add(yearsBetweenLabel);
+
+        yearsBetweenAndLabel = new JLabel("to");
+        yearsBetweenAndLabel.setBounds(287, 97, 25, 16);
+        yearsBetweenAndLabel.setFont(new Font("Dialog", Font.BOLD, 12));
+        inventoryPanel.add(yearsBetweenAndLabel);
+
+        fromYearsComboBox = new JComboBox<>();
+        fromYearsComboBox.setBounds(166, 93, 109, 27);
+        fromYearsComboBox.addItem("All");
+        int startYear = 2000;
+        int endYear = Year.now().getValue();
+        for (int i = endYear + 1; i >= startYear; --i) {
+            fromYearsComboBox.addItem(String.valueOf(i));
+        }
+        inventoryPanel.add(fromYearsComboBox);
+
+        toYearsComboBox = new JComboBox<>();
+        toYearsComboBox.setBounds(323, 93, 109, 27);
+        toYearsComboBox.addItem("All");
+        for (int i = endYear + 1; i >= startYear; --i) {
+            toYearsComboBox.addItem(String.valueOf(i));
+        }
+        inventoryPanel.add(toYearsComboBox);
+    }
+
+    private void createVINFilterComponents() {
+        vinLabel = new JLabel("VIN");
+        vinLabel.setBounds(73, 59, 61, 16);
+        vinLabel.setFont(new Font("Dialog", Font.BOLD, 12));
+        inventoryPanel.add(vinLabel);
+
+        vinTextBox = new JTextField();
+        // vinTextBox.setTransferHandler(null);
+        vinTextBox.setBounds(167, 54, 130, 26);
+        inventoryPanel.add(vinTextBox);
+        vinTextBox.setColumns(10);
+    }
+
+    private void createCarCategoryComponents() {
+        carCategoryLabel = new JLabel("Category");
+        carCategoryLabel.setFont(new Font("Dialog", Font.BOLD, 12));
+        carCategoryLabel.setBounds(73, 24, 61, 16);
+        inventoryPanel.add(carCategoryLabel);
+
+        category = new JComboBox<>();
+        category.addItem("All");
+        for (CarCategory carCategory : CarCategory.values()) {
+            category.addItem(carCategory.toString());
+        }
+
+        category.setBounds(167, 20, 130, 27);
+        inventoryPanel.add(category);
+    }
+
+
 
     private void addButtonClickActionListenerToCancelButton() {
         detailsPageCancelButton.addActionListener(new ActionListener() {
@@ -677,7 +764,7 @@ public class IncentiveManagerUI extends JFrame {
         detailsPanel.add(startDateTextBox);
 
         startDateLabel = new JLabel("Start Date");
-        startDateLabel.setFont(new Font("Lucida Grande", Font.BOLD, 15));
+        startDateLabel.setFont(new Font("Dialog", Font.BOLD, 15));
         startDateLabel.setBounds(68, 26, 89, 30);
         detailsPanel.add(startDateLabel);
     }
@@ -692,7 +779,7 @@ public class IncentiveManagerUI extends JFrame {
         detailsPanel.add(endDateTextBox);
 
         endDateLabel = new JLabel("End Date");
-        endDateLabel.setFont(new Font("Lucida Grande", Font.BOLD, 15));
+        endDateLabel.setFont(new Font("Dialog", Font.BOLD, 15));
         endDateLabel.setBounds(432, 26, 89, 30);
         detailsPanel.add(endDateLabel);
     }
