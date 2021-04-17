@@ -4,6 +4,7 @@ import entities.*;
 import validators.IncentiveDataValidator;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -103,6 +104,17 @@ public class IncentiveManagerUI extends JFrame {
     private JComboBox<String> milageComparisonTypeComboxBox;
     private JTextField searchByMilageFilterTextBox;
 
+    private JButton searchButton;
+
+    private JTable scrollPaneCarTable;
+    private JButton clearAllButton;
+    private JCheckBox selectAllCheckBox;
+    private JScrollPane scrollPane;
+
+    private JButton inventoryPageCancelButton;
+    private JButton inventoryPageNextButton;
+    private JButton inventoryPagePreviousButton;
+
 
     public IncentiveManagerUI() {
         this.setTitle("Create Incentive");
@@ -201,12 +213,92 @@ public class IncentiveManagerUI extends JFrame {
 
         // Create the components related to miles filter
         createMilesFilterComponents();
+
+        // Create the search button
+        createSearchButton();
+
+        // Create the cleaAll button
+        createClearAllButton();
+
+        // Create scroll pane of car table
+        createScrollPaneCarTable();
+
+        // create navigation buttons();
+        createInventoryPageNavigationButtons();
+    }
+
+    private void createInventoryPageNavigationButtons() {
+        inventoryPagePreviousButton = new JButton("Previous");
+        inventoryPagePreviousButton.setBounds(170, 448, 117, 29);
+        inventoryPanel.add(inventoryPagePreviousButton);
+
+        inventoryPageCancelButton = new JButton("Cancel");
+        inventoryPageCancelButton.setBounds(370, 448, 117, 29);
+        inventoryPanel.add(inventoryPageCancelButton);
+
+        inventoryPageNextButton = new JButton("Next");
+        inventoryPageNextButton.setBounds(570, 448, 117, 29);
+        inventoryPanel.add(inventoryPageNextButton);
+    }
+
+    private void createScrollPaneCarTable() {
+        selectAllCheckBox = new JCheckBox("Select All");
+        selectAllCheckBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // TODO: Write Code to Select All from the table
+            }
+        });
+        selectAllCheckBox.setBounds(773, 200, 128, 23);
+        selectAllCheckBox.setFont(new Font("Dialog", Font.BOLD, 12));
+        inventoryPanel.add(selectAllCheckBox);
+        
+        scrollPane = new JScrollPane();
+        scrollPane.setBounds(25, 230, 829, 210);
+        inventoryPanel.add(scrollPane);
+
+        Vector<String> headerNames=new Vector<>();
+        headerNames.add("Select");
+        headerNames.add("VIN");
+        headerNames.add("Category");
+        headerNames.add("Make");
+        headerNames.add("Model");
+        headerNames.add("Year");
+        headerNames.add("Miles");
+        headerNames.add("MSRP");
+
+        Vector v = new Vector();
+        scrollPaneCarTable = new JTable(new DefaultTableModel(v, headerNames) {
+            public boolean isCellEditable(int row, int column) {
+                return column <= 0;
+            }
+
+            public Class getColumnClass(int c) {
+                return getValueAt(0, c).getClass();
+            }
+        });
+
+
+        scrollPane.setViewportView(scrollPaneCarTable);
+    }
+    
+    private void createClearAllButton() {
+        clearAllButton = new JButton("Clear All");
+        clearAllButton.setFont(new Font("Dialog", Font.BOLD, 12));
+        clearAllButton.setBounds(546, 170, 122, 42);
+        inventoryPanel.add(clearAllButton);
+    }
+
+    private void createSearchButton() {
+        searchButton = new JButton("Search");
+        searchButton.setFont(new Font("Dialog", Font.BOLD, 12));
+        searchButton.setBounds(396, 170, 122, 42);
+        inventoryPanel.add(searchButton);
     }
 
     private void createMilesFilterComponents() {
         milageFilterLabel = new JLabel("Mileage");
         milageFilterLabel.setFont(new Font("Dialog", Font.BOLD, 12));
-        milageFilterLabel.setBounds(496, 117, 122, 16);
+        milageFilterLabel.setBounds(420, 117, 122, 16);
         milageFilterLabel.setFont(new Font("Dialog", Font.BOLD, 12));
         inventoryPanel.add(milageFilterLabel);
 
@@ -223,13 +315,13 @@ public class IncentiveManagerUI extends JFrame {
 
     private void createPriceFilterComponents() {
         searchByLabel = new JLabel("Search By");
-        searchByLabel.setBounds(496, 24, 109, 16);
+        searchByLabel.setBounds(420, 24, 109, 16);
         searchByLabel.setFont(new Font("Dialog", Font.BOLD, 12));
         inventoryPanel.add(searchByLabel);
 
         retailPriceFilerLabel = new JLabel("Retail Price ($)");
         retailPriceFilerLabel.setFont(new Font("Dialog", Font.BOLD, 12));
-        retailPriceFilerLabel.setBounds(496, 64, 85, 16);
+        retailPriceFilerLabel.setBounds(420, 64, 85, 16);
         inventoryPanel.add(retailPriceFilerLabel);
 
         priceComparisonTypeComboxBox = new JComboBox<>();
@@ -251,7 +343,7 @@ public class IncentiveManagerUI extends JFrame {
 
         modelFilterComboBox = new JComboBox<>();
         modelFilterComboBox.setModel(new DefaultComboBoxModel(new String[] {"All Models", "528i", "328i", "Eldorado", "Escalade", "TL", "323i"}));
-        modelFilterComboBox.setBounds(167, 182, 130, 27);
+        modelFilterComboBox.setBounds(167, 182, 170, 27);
         inventoryPanel.add(modelFilterComboBox);
     }
 
@@ -264,7 +356,7 @@ public class IncentiveManagerUI extends JFrame {
         // Make This Dynamic
         makeFilterComboBox = new JComboBox<>();
         makeFilterComboBox.setModel(new DefaultComboBoxModel(new String[] {"All Makes", "BMW", "Cadillac", "Acura", "Audi", "Buick", "Chevrolet"}));
-        makeFilterComboBox.setBounds(167, 135, 130, 27);
+        makeFilterComboBox.setBounds(167, 135, 170, 27);
         inventoryPanel.add(makeFilterComboBox);
     }
 
@@ -275,12 +367,12 @@ public class IncentiveManagerUI extends JFrame {
         inventoryPanel.add(yearsBetweenLabel);
 
         yearsBetweenAndLabel = new JLabel("to");
-        yearsBetweenAndLabel.setBounds(287, 97, 25, 16);
+        yearsBetweenAndLabel.setBounds(245, 97, 25, 16);
         yearsBetweenAndLabel.setFont(new Font("Dialog", Font.BOLD, 12));
         inventoryPanel.add(yearsBetweenAndLabel);
 
         fromYearsComboBox = new JComboBox<>();
-        fromYearsComboBox.setBounds(166, 93, 109, 27);
+        fromYearsComboBox.setBounds(166, 93, 70, 27);
         fromYearsComboBox.addItem("All");
         int startYear = 2000;
         int endYear = Year.now().getValue();
@@ -290,7 +382,7 @@ public class IncentiveManagerUI extends JFrame {
         inventoryPanel.add(fromYearsComboBox);
 
         toYearsComboBox = new JComboBox<>();
-        toYearsComboBox.setBounds(323, 93, 109, 27);
+        toYearsComboBox.setBounds(265, 93, 70, 27);
         toYearsComboBox.addItem("All");
         for (int i = endYear + 1; i >= startYear; --i) {
             toYearsComboBox.addItem(String.valueOf(i));
@@ -300,13 +392,13 @@ public class IncentiveManagerUI extends JFrame {
 
     private void createVINFilterComponents() {
         vinLabel = new JLabel("VIN");
-        vinLabel.setBounds(73, 59, 61, 16);
+        vinLabel.setBounds(73, 59, 60, 16);
         vinLabel.setFont(new Font("Dialog", Font.BOLD, 12));
         inventoryPanel.add(vinLabel);
 
         vinTextBox = new JTextField();
         // vinTextBox.setTransferHandler(null);
-        vinTextBox.setBounds(167, 54, 130, 26);
+        vinTextBox.setBounds(167, 54, 170, 26);
         inventoryPanel.add(vinTextBox);
         vinTextBox.setColumns(10);
     }
@@ -323,7 +415,7 @@ public class IncentiveManagerUI extends JFrame {
             category.addItem(carCategory.toString());
         }
 
-        category.setBounds(167, 20, 130, 27);
+        category.setBounds(167, 20, 170, 27);
         inventoryPanel.add(category);
     }
 
