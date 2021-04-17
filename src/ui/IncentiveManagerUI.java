@@ -95,10 +95,13 @@ public class IncentiveManagerUI extends JFrame {
     private JLabel modelFilterLabel;
     private JComboBox<String> modelFilterComboBox;
 
-    private JLabel searchByPriceLabel;
+    private JLabel searchByLabel;
     private JLabel retailPriceFilerLabel;
     private JComboBox<String> priceComparisonTypeComboxBox;
     private JTextField searchByPriceFilterTextBox;
+    private JLabel milageFilterLabel;
+    private JComboBox<String> milageComparisonTypeComboxBox;
+    private JTextField searchByMilageFilterTextBox;
 
 
     public IncentiveManagerUI() {
@@ -195,26 +198,47 @@ public class IncentiveManagerUI extends JFrame {
 
         // Create the components related to price filter
         createPriceFilterComponents();
+
+        // Create the components related to miles filter
+        createMilesFilterComponents();
+    }
+
+    private void createMilesFilterComponents() {
+        milageFilterLabel = new JLabel("Mileage");
+        milageFilterLabel.setFont(new Font("Dialog", Font.BOLD, 12));
+        milageFilterLabel.setBounds(496, 117, 122, 16);
+        milageFilterLabel.setFont(new Font("Dialog", Font.BOLD, 12));
+        inventoryPanel.add(milageFilterLabel);
+
+        milageComparisonTypeComboxBox = new JComboBox<>();
+        milageComparisonTypeComboxBox.setModel(new DefaultComboBoxModel<>(new String[] { "<=", ">="}));
+        milageComparisonTypeComboxBox.setBounds(610, 117, 75, 27);
+        inventoryPanel.add(milageComparisonTypeComboxBox);
+
+        searchByMilageFilterTextBox = new JTextField();
+        searchByMilageFilterTextBox.setBounds(701, 117, 100, 26);
+        inventoryPanel.add(searchByMilageFilterTextBox);
+        searchByMilageFilterTextBox.setColumns(10);
     }
 
     private void createPriceFilterComponents() {
-        searchByPriceLabel = new JLabel("Search By Price($)");
-        searchByPriceLabel.setBounds(496, 24, 109, 16);
-        searchByPriceLabel.setFont(new Font("Dialog", Font.BOLD, 12));
-        inventoryPanel.add(searchByPriceLabel);
+        searchByLabel = new JLabel("Search By");
+        searchByLabel.setBounds(496, 24, 109, 16);
+        searchByLabel.setFont(new Font("Dialog", Font.BOLD, 12));
+        inventoryPanel.add(searchByLabel);
 
-        retailPriceFilerLabel = new JLabel("Retail Price");
-        retailPriceFilerLabel.setBounds(496, 24, 109, 16);
-        retailPriceFilerLabel.setBounds(496, 64, 77, 16);
+        retailPriceFilerLabel = new JLabel("Retail Price ($)");
+        retailPriceFilerLabel.setFont(new Font("Dialog", Font.BOLD, 12));
+        retailPriceFilerLabel.setBounds(496, 64, 85, 16);
         inventoryPanel.add(retailPriceFilerLabel);
 
         priceComparisonTypeComboxBox = new JComboBox<>();
         priceComparisonTypeComboxBox.setModel(new DefaultComboBoxModel<>(new String[] { "<=", ">="}));
-        priceComparisonTypeComboxBox.setBounds(610, 60, 79, 27);
+        priceComparisonTypeComboxBox.setBounds(610, 60, 75, 27);
         inventoryPanel.add(priceComparisonTypeComboxBox);
 
         searchByPriceFilterTextBox = new JTextField();
-        searchByPriceFilterTextBox.setBounds(701, 59, 109, 26);
+        searchByPriceFilterTextBox.setBounds(701, 59, 100, 26);
         inventoryPanel.add(searchByPriceFilterTextBox);
         searchByPriceFilterTextBox.setColumns(10);
     }
