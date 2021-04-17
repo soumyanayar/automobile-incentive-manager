@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.text.ParseException;
 import java.time.Year;
 import java.util.Date;
@@ -92,6 +94,11 @@ public class IncentiveManagerUI extends JFrame {
 
     private JLabel modelFilterLabel;
     private JComboBox<String> modelFilterComboBox;
+
+    private JLabel searchByPriceLabel;
+    private JLabel retailPriceFilerLabel;
+    private JComboBox<String> priceComparisonTypeComboxBox;
+    private JTextField searchByPriceFilterTextBox;
 
 
     public IncentiveManagerUI() {
@@ -185,6 +192,31 @@ public class IncentiveManagerUI extends JFrame {
 
         // Create the components related to model filter
         createModelFilerComponents();
+
+        // Create the components related to price filter
+        createPriceFilterComponents();
+    }
+
+    private void createPriceFilterComponents() {
+        searchByPriceLabel = new JLabel("Search By Price($)");
+        searchByPriceLabel.setBounds(496, 24, 109, 16);
+        searchByPriceLabel.setFont(new Font("Dialog", Font.BOLD, 12));
+        inventoryPanel.add(searchByPriceLabel);
+
+        retailPriceFilerLabel = new JLabel("Retail Price");
+        retailPriceFilerLabel.setBounds(496, 24, 109, 16);
+        retailPriceFilerLabel.setBounds(496, 64, 77, 16);
+        inventoryPanel.add(retailPriceFilerLabel);
+
+        priceComparisonTypeComboxBox = new JComboBox<>();
+        priceComparisonTypeComboxBox.setModel(new DefaultComboBoxModel<>(new String[] { "<=", ">="}));
+        priceComparisonTypeComboxBox.setBounds(610, 60, 79, 27);
+        inventoryPanel.add(priceComparisonTypeComboxBox);
+
+        searchByPriceFilterTextBox = new JTextField();
+        searchByPriceFilterTextBox.setBounds(701, 59, 109, 26);
+        inventoryPanel.add(searchByPriceFilterTextBox);
+        searchByPriceFilterTextBox.setColumns(10);
     }
 
     private void createModelFilerComponents() {
