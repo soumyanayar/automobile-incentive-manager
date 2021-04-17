@@ -83,9 +83,7 @@ public class IncentiveManagerUI extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // this.pack();
-
         tabbedPane = new JTabbedPane();
-        tabbedPane.setBackground(Color.black);
 
         detailsPanel = new JPanel();
         detailsPanel.setLayout(null);
@@ -104,8 +102,7 @@ public class IncentiveManagerUI extends JFrame {
         this.setVisible(true);
     }
 
-    private void createDetailsPanelComponents()
-    {
+    private void createDetailsPanelComponents() {
         // Create the components related to start date of the incentive.
         createStartDateComponents();
 
@@ -177,31 +174,32 @@ public class IncentiveManagerUI extends JFrame {
         }
 
         if (startDate.after(endDate)) {
-            JOptionPane.showMessageDialog(null, "Start Date: "+ startDate + " cannot be after End Date: " + endDate, "Start Date greater than End Date", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Start Date: " + startDate + " cannot be after End Date: " + endDate, "Start Date greater than End Date", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         this.incentiveTypeSelected = IncentiveType.fromString(incentiveGroups.getSelection().getActionCommand());
 
-        switch(this.incentiveTypeSelected)
-        {
-            case DISCOUNT -> {
+        assert this.incentiveTypeSelected != null;
+
+        switch (this.incentiveTypeSelected) {
+            case DISCOUNT:
                 boolean isCashCountParametersValid = validateAndParseCashDiscountIncentiveParameters();
                 if (isCashCountParametersValid) {
                     String message = this.incentiveTypeSelected + "\n" + this.cashDiscountType + "\n" + this.discountFlatAmount + "\n" + this.discountPercentage;
                     JOptionPane.showMessageDialog(null, message);
                     tabbedPane.setSelectedComponent(inventoryPanel);
                 }
-            }
-            case LOAN -> {
+                break;
+            case LOAN:
                 boolean isLoanIncentiveParametersValid = validateAndParseLoanIncentiveParameters();
                 if (isLoanIncentiveParametersValid) {
                     String message = this.incentiveTypeSelected + "\n" + this.loanInterestRate + "\n" + this.loanDurationInMonths;
                     JOptionPane.showMessageDialog(null, message);
                     tabbedPane.setSelectedComponent(inventoryPanel);
                 }
-            }
-            case REBATE -> {
+                break;
+            case REBATE:
                 boolean isRebateIncentiveParametersValid = validateAndParseRebateIncentiveParameters();
                 if (isRebateIncentiveParametersValid) {
                     String message = this.incentiveTypeSelected + rebateMap.entrySet().stream()
@@ -210,17 +208,17 @@ public class IncentiveManagerUI extends JFrame {
                     JOptionPane.showMessageDialog(null, message);
                     tabbedPane.setSelectedComponent(inventoryPanel);
                 }
-            }
-            case LEASE -> {
+            case LEASE:
                 boolean isLeaseIncentiveParametersValid = validateAndParseLeaseIncentiveParameters();
                 if (isLeaseIncentiveParametersValid) {
                     String message = this.incentiveTypeSelected + "\n" + this.leaseDurationInMonths + "\n" + this.leaseSigningAmount + "\n" + this.leaseMonthlyPayment;
                     JOptionPane.showMessageDialog(null, message);
                     tabbedPane.setSelectedComponent(inventoryPanel);
                 }
-            }
+                break;
 
-            default -> JOptionPane.showMessageDialog(null, "Please select valid incentive Type", "Invalid Incentive type", JOptionPane.ERROR_MESSAGE);
+            default:
+                JOptionPane.showMessageDialog(null, "Please select valid incentive Type", "Invalid Incentive type", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -228,13 +226,13 @@ public class IncentiveManagerUI extends JFrame {
         try {
             this.leaseDurationInMonths = Integer.parseInt(leaseDurationInMonthsTextBox.getText());
             if (this.leaseDurationInMonths <= 0 || this.leaseDurationInMonths > 72) {
-                JOptionPane.showMessageDialog(null,"Please enter valid number of months for the lease duration (1-72)", "Invalid lease duration",JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Please enter valid number of months for the lease duration (1-72)", "Invalid lease duration", JOptionPane.ERROR_MESSAGE);
                 this.leaseSigningAmount = 0.0;
                 this.leaseMonthlyPayment = 0.0;
                 return false;
             }
         } catch (NumberFormatException ne) {
-            JOptionPane.showMessageDialog(null,"Please enter valid number of months for the lease duration", "Invalid lease duration",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Please enter valid number of months for the lease duration", "Invalid lease duration", JOptionPane.ERROR_MESSAGE);
             this.leaseSigningAmount = 0.0;
             this.leaseMonthlyPayment = 0.0;
             return false;
@@ -243,7 +241,7 @@ public class IncentiveManagerUI extends JFrame {
         try {
             this.leaseSigningAmount = Double.parseDouble(leaseSigningAmountTextBox.getText());
         } catch (NumberFormatException ne) {
-            JOptionPane.showMessageDialog(null,"Please enter valid number for lease signing amount", "Invalid lease signing amount",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Please enter valid number for lease signing amount", "Invalid lease signing amount", JOptionPane.ERROR_MESSAGE);
             this.leaseDurationInMonths = 0;
             this.leaseMonthlyPayment = 0.0;
             return false;
@@ -252,7 +250,7 @@ public class IncentiveManagerUI extends JFrame {
         try {
             this.leaseMonthlyPayment = Double.parseDouble(leaseMonthlyPaymentInDollarsTextBox.getText());
         } catch (NumberFormatException ne) {
-            JOptionPane.showMessageDialog(null,"Please enter valid number of for monthly lease payment", "Invalid monthly lease payment",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Please enter valid number of for monthly lease payment", "Invalid monthly lease payment", JOptionPane.ERROR_MESSAGE);
             this.leaseDurationInMonths = 0;
             this.leaseSigningAmount = 0.0;
             return false;
@@ -329,7 +327,7 @@ public class IncentiveManagerUI extends JFrame {
         }
 
         switch (cashDiscountType) {
-            case PERCENTAGE -> {
+            case PERCENTAGE:
                 try {
                     this.discountPercentage = Double.parseDouble(percentageRateDiscountTextField.getText());
                     if (discountPercentage < 0.0 || discountPercentage > 100.0) {
@@ -342,9 +340,9 @@ public class IncentiveManagerUI extends JFrame {
                     JOptionPane.showMessageDialog(null, "Please enter valid percentage value between 0.0 to 100.0 in the discount percentage field", "Invalid Discount Percentage", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
-            }
+                break;
 
-            case FLATAMOUNT -> {
+            case FLATAMOUNT:
                 try {
                     this.discountFlatAmount = Double.parseDouble(flatRateDiscountTextField.getText());
                     this.discountPercentage = 0.0;
@@ -352,12 +350,11 @@ public class IncentiveManagerUI extends JFrame {
                     JOptionPane.showMessageDialog(null, "Please enter valid number for flat amount field", "Invalid Flat Amount", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
-            }
+                break;
 
-            default -> {
+            default:
                 JOptionPane.showMessageDialog(null, "Please select valid discount type", "Invalid Discount Type", JOptionPane.ERROR_MESSAGE);
                 return false;
-            }
         }
 
         return true;
@@ -700,8 +697,15 @@ public class IncentiveManagerUI extends JFrame {
         detailsPanel.add(endDateLabel);
     }
 
-
     public static void main(String[] args) {
-        IncentiveManagerUI frame = new IncentiveManagerUI();
+        EventQueue.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            } finally {
+                new IncentiveManagerUI();
+            }
+        });
     }
 }

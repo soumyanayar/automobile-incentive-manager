@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/IncentiveManagerUI.iml" filepath="$PROJECT_DIR$/IncentiveManagerUI.iml" />
+      <module fileurl="file://$PROJECT_DIR$/incentivemanager.iml" filepath="$PROJECT_DIR$/incentivemanager.iml" />
     </modules>
   </component>
 </project>
