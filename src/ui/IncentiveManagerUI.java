@@ -116,6 +116,12 @@ public class IncentiveManagerUI extends JFrame {
     private JButton descriptionPagePreviousButton;
     private JButton descriptionPageNextButton;
     private JButton descriptionPagePublishButton;
+    private JLabel descriptionPageTitleLabel;
+    private JEditorPane descriptionPageTitleEditorPane;
+    private JLabel descriptionPageDescriptionLabel;
+    private JEditorPane descriptionPageDescriptionEditorPane;
+    private JLabel descriptionPageDisclaimerLabel;
+    private JEditorPane descriptionPageDisclaimerEditorPane;
 
 
     public IncentiveManagerUI() {
@@ -151,8 +157,86 @@ public class IncentiveManagerUI extends JFrame {
     }
 
     private void createDescriptionPanelComponents() {
+        // Create Title Components
+        createDescriptionPageTitleComponents();
+
+        // Create Description Components
+        createDescriptionPageDescriptionComponents();
+
+        // Create Disclaimer Components
+        createDescriptionPageDisclaimerComponents();
+
         // Create Description Page Navigation Buttons
         createDescriptionPageNavigationButtons();
+
+        //default disclaimer content
+        createDefaultDisclaimerComponents();
+    }
+
+    private void createDefaultDisclaimerComponents() {
+        String defaultDisclaimerText = "Sales tax does not qualify for this incentive. This incentive is not redeemable for " +
+                "cash or gift cards, nor is it valid toward previous purchases. Incentive may not be combined with any " +
+                "other coupons, discounts, offers, or promotions. ";
+
+        JCheckBox defaultDisclaimerCheckBox = new JCheckBox("Use Default Disclaimer");
+        defaultDisclaimerCheckBox.setBounds(80, 345, 180, 23);
+        descriptionPanel.add(defaultDisclaimerCheckBox);
+        defaultDisclaimerCheckBox.setSelected(false);
+
+        defaultDisclaimerCheckBox.addActionListener(e -> {
+            if (defaultDisclaimerCheckBox.isSelected()) {
+                descriptionPageDisclaimerEditorPane.setForeground(Color.BLACK);
+                descriptionPageDisclaimerEditorPane.setText(defaultDisclaimerText);
+            } else {
+                descriptionPageDisclaimerEditorPane.setForeground(Color.GRAY);
+                descriptionPageDisclaimerEditorPane.setText("Maximum 250 characters");
+            }
+        });
+    }
+
+    private void createDescriptionPageDisclaimerComponents() {
+        descriptionPageDisclaimerLabel = new JLabel("Disclaimer");
+        descriptionPageDisclaimerLabel.setFont(new Font("Dialog", Font.BOLD, 14));
+        descriptionPageDisclaimerLabel.setBounds(87, 306, 103, 27);
+        descriptionPanel.add(descriptionPageDisclaimerLabel);
+
+        descriptionPageDisclaimerEditorPane = new JEditorPane();
+        descriptionPageDisclaimerEditorPane.setFont(new Font("Dialog", Font.PLAIN, 12));
+        descriptionPageDisclaimerEditorPane.setBounds(247, 295, 420, 88);
+        descriptionPanel.add(descriptionPageDisclaimerEditorPane);
+
+        Watermark disclaimerWatermark = new Watermark("Maximum 250 characters", descriptionPageDisclaimerEditorPane);
+        descriptionPageDisclaimerEditorPane.addFocusListener(disclaimerWatermark);
+    }
+
+    private void createDescriptionPageDescriptionComponents() {
+        descriptionPageDescriptionLabel = new JLabel("Description");
+        descriptionPageDescriptionLabel.setFont(new Font("Dialog", Font.BOLD, 14));
+        descriptionPageDescriptionLabel.setBounds(87, 122, 103, 27);
+        descriptionPanel.add(descriptionPageDescriptionLabel);
+
+        descriptionPageDescriptionEditorPane = new JEditorPane();
+        descriptionPageDescriptionEditorPane.setFont(new Font("Dialog", Font.PLAIN, 12));
+        descriptionPageDescriptionEditorPane.setBounds(247, 122, 420, 127);
+        descriptionPanel.add(descriptionPageDescriptionEditorPane);
+
+        Watermark descriptionWatermark = new Watermark("Maximum 350 characters", descriptionPageDescriptionEditorPane);
+        descriptionPageDescriptionEditorPane.addFocusListener(descriptionWatermark);
+    }
+
+    private void createDescriptionPageTitleComponents() {
+        descriptionPageTitleLabel = new JLabel("Title");
+        descriptionPageTitleLabel.setFont(new Font("Dialog", Font.BOLD, 14));
+        descriptionPageTitleLabel.setBounds(87, 55, 61, 27);
+        descriptionPanel.add(descriptionPageTitleLabel);
+
+        descriptionPageTitleEditorPane = new JEditorPane();
+        descriptionPageTitleEditorPane.setBounds(247, 42, 420, 40);
+        descriptionPageTitleEditorPane.setFont(new Font("Dialog", Font.PLAIN, 12));
+        descriptionPanel.add(descriptionPageTitleEditorPane);
+
+        Watermark titleWatermark = new Watermark("Maximum 100 characters", descriptionPageTitleEditorPane);
+        descriptionPageTitleEditorPane.addFocusListener(titleWatermark);
     }
 
     private void createDetailsPanelComponents() {
