@@ -339,6 +339,7 @@ public class IncentiveManagerUI extends JFrame {
 
             // Apply All the filters and Fill the Table
             fillTable(CarsFilter.ApplyFilters(carsByDealerId, filtersToApply));
+            selectAllCheckBox.setSelected(false);
         });
     }
 
@@ -457,6 +458,7 @@ public class IncentiveManagerUI extends JFrame {
     }
 
     private void validateCreateAndPublishIncentive() {
+        // TODO
     }
 
     private void createInventoryPageNavigationButtons() {
@@ -490,14 +492,21 @@ public class IncentiveManagerUI extends JFrame {
     }
 
     private void validateInventoryDetailsForIncentives() {
+        // TODO
+    }
 
+    private void selectAllItemsAction(boolean select) {
+        DefaultTableModel defaultTableModel = (DefaultTableModel) scrollPaneCarTable.getModel();
+        for (int i = 0; i< defaultTableModel.getRowCount(); i++) {
+            defaultTableModel.setValueAt(select, i, 0);
+        }
     }
 
     private void createScrollPaneCarTable() {
         selectAllCheckBox = new JCheckBox("Select All");
         selectAllCheckBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // TODO: Write Code to Select All from the table
+                selectAllItemsAction(selectAllCheckBox.isSelected());
             }
         });
         selectAllCheckBox.setBounds(25, 425, 128, 23);
@@ -531,12 +540,9 @@ public class IncentiveManagerUI extends JFrame {
 
         scrollPane.setViewportView(scrollPaneCarTable);
         fillTable(carsByDealerId);
-
-        //ApplyFilters(carsByDealerId);
     }
 
     private void fillTable(List<Car> cars) {
-        // TODO: Rename stuffs properly
         DefaultTableModel defaultTableModel = (DefaultTableModel) scrollPaneCarTable.getModel();
         defaultTableModel.setRowCount(0);
         for (Car car : cars) {
