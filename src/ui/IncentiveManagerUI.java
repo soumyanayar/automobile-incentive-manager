@@ -1,5 +1,8 @@
 package ui;
 
+import datafilter.CarsFilter;
+import dataprovider.CsvDataProvider;
+import dataprovider.DataProvider;
 import entities.*;
 import validators.IncentiveDataValidator;
 
@@ -12,10 +15,15 @@ import java.text.ParseException;
 import java.time.Year;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
 public class IncentiveManagerUI extends JFrame {
+    private DataProvider dataProvider;
+    private List<Car> carsByDealerId;
+    private String dealerId;
+
     private JPanel mainPanel;
     private JTabbedPane tabbedPane;
     private JPanel detailsPanel;
@@ -124,7 +132,11 @@ public class IncentiveManagerUI extends JFrame {
     private JEditorPane descriptionPageDisclaimerEditorPane;
 
 
-    public IncentiveManagerUI() {
+    public IncentiveManagerUI(DataProvider dataProvider, String dealerId) {
+        this.dataProvider = dataProvider;
+        this.dealerId = dealerId;
+        this.carsByDealerId = dataProvider.getAllCarsByDealerId(this.dealerId);
+
         this.setTitle("Create Incentive");
 
         mainPanel = new JPanel(new GridLayout());
@@ -421,6 +433,27 @@ public class IncentiveManagerUI extends JFrame {
         });
 
         scrollPane.setViewportView(scrollPaneCarTable);
+        fillTable(carsByDealerId);
+
+        //ApplyFilters(carsByDealerId);
+    }
+
+    private void fillTable(List<Car> cars) {
+        // TODO: Rename stuffs properly
+        DefaultTableModel dtm = (DefaultTableModel) scrollPaneCarTable.getModel();
+        dtm.setRowCount(0);
+        for (Car car : cars) {
+            Vector vector = new Vector();
+            vector.add(false);
+            vector.add(car.getVIN());
+            vector.add(car.getCarCategory());
+            vector.add(car.getMake());
+            vector.add(car.getModel());
+            vector.add(car.getYear());
+            vector.add(car.getMileage());
+            vector.add(car.getMSRP());
+            dtm.addRow(vector);
+        }
     }
     
     private void createClearAllButton() {
@@ -511,7 +544,17 @@ public class IncentiveManagerUI extends JFrame {
 
         // TODO: Make This Dynamic
         modelFilterComboBox = new JComboBox<>();
-        modelFilterComboBox.setModel(new DefaultComboBoxModel<>(new String[] {"All Models", "528i", "328i", "Eldorado", "Escalade", "TL", "323i"}));
+
+        String[] carModels = carsByDealerId
+                       .stream()
+                       .map(Car::getModel)
+                       .distinct()
+                       .toArray(String[]::new);
+
+        DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>(carModels);
+        comboBoxModel.insertElementAt("All Models", 0);
+        modelFilterComboBox.setModel(comboBoxModel);
+        modelFilterComboBox.setSelectedIndex(0);
         modelFilterComboBox.setBounds(167, 171, 170, 27);
         inventoryPanel.add(modelFilterComboBox);
     }
@@ -522,9 +565,18 @@ public class IncentiveManagerUI extends JFrame {
         makeFilterLabel.setFont(new Font("Dialog", Font.BOLD, 12));
         inventoryPanel.add(makeFilterLabel);
 
-        // TODO: Make This Dynamic
         makeFilterComboBox = new JComboBox<>();
-        makeFilterComboBox.setModel(new DefaultComboBoxModel<>(new String[] {"All Makes", "BMW", "Cadillac", "Acura", "Audi", "Buick", "Chevrolet"}));
+
+        String[] carMakes = carsByDealerId
+                           .stream()
+                           .map(Car::getMake)
+                           .distinct()
+                           .toArray(String[]::new);
+
+        DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>(carMakes);
+        comboBoxModel.insertElementAt("All Makes", 0);
+        makeFilterComboBox.setModel(comboBoxModel);
+        makeFilterComboBox.setSelectedIndex(0);
         makeFilterComboBox.setBounds(167, 133, 170, 27);
         inventoryPanel.add(makeFilterComboBox);
     }
@@ -1155,7 +1207,7 @@ public class IncentiveManagerUI extends JFrame {
             } catch (Exception ex) {
                 ex.printStackTrace();
             } finally {
-                new IncentiveManagerUI();
+                new IncentiveManagerUI(new CsvDataProvider(), "E5301FBD-D4E1-4595-AC90-260228D681A1");
             }
         });
     }
