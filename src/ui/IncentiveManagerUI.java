@@ -13,10 +13,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.time.Year;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Vector;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class IncentiveManagerUI extends JFrame {
@@ -86,7 +85,7 @@ public class IncentiveManagerUI extends JFrame {
     private ButtonGroup incentiveGroups;
 
     private JLabel carCategoryLabel;
-    private JComboBox<String> category;
+    private JComboBox<String> carCategoryComboBox;
 
     private JLabel vinLabel;
     private JTextField vinTextBox;
@@ -243,6 +242,104 @@ public class IncentiveManagerUI extends JFrame {
 
         // create navigation buttons();
         createInventoryPageNavigationButtons();
+
+        // Add Action Listener to Search Button()
+        addActionListenerToInventoryPageSearchButton();
+    }
+
+    private void addActionListenerToInventoryPageSearchButton() {
+        searchButton.addActionListener(e -> {
+            List<Predicate<Car>> filtersToApply = new ArrayList<>();
+
+            // Car Category Filtering
+            String carCategorySelectedString = (String) carCategoryComboBox.getSelectedItem();
+            assert carCategorySelectedString != null;
+            boolean isCarCategoryFilterRequired = !carCategorySelectedString.equalsIgnoreCase("All");
+            if (isCarCategoryFilterRequired) {
+                CarCategory carCategorySelected = CarCategory.fromString(carCategorySelectedString);
+                filtersToApply.add(CarsFilter.isCarCategoryEqualTo(carCategorySelected));
+            }
+
+            // VIN Filtering
+            boolean isVINFilterRequired = !vinTextBox.getText().isEmpty();
+            if (isVINFilterRequired) {
+                String VINEntered = vinTextBox.getText();
+                filtersToApply.add(CarsFilter.isCarVINEqualTo(VINEntered));
+            }
+
+            // Years From Filter
+            String yearsFromSelectedString = (String) fromYearsComboBox.getSelectedItem();
+            assert yearsFromSelectedString != null;
+            boolean isYearsFromFilterRequired = !yearsFromSelectedString.equalsIgnoreCase("All");
+            if (isYearsFromFilterRequired) {
+                int yearsFrom = Integer.parseInt(yearsFromSelectedString);
+                filtersToApply.add(CarsFilter.isCarYearGreaterThanOrEqualTo(yearsFrom));
+            }
+
+            // Years To Filter
+            String yearsToSelectedString = (String) toYearsComboBox.getSelectedItem();
+            assert yearsToSelectedString != null;
+            boolean isYearsToFilterRequired = !yearsToSelectedString.equalsIgnoreCase("All");
+            if (isYearsToFilterRequired) {
+                int yearsTo = Integer.parseInt(yearsToSelectedString);
+                filtersToApply.add(CarsFilter.isCarYearLesserThanOrEqualTo(yearsTo));
+            }
+
+            String carMakeSelected = (String) makeFilterComboBox.getSelectedItem();
+            assert carMakeSelected != null;
+            boolean isMakeFilterRequired = !carMakeSelected.equalsIgnoreCase("All Makes");
+            if (isMakeFilterRequired) {
+                filtersToApply.add(CarsFilter.isCarMakeEqual(carMakeSelected));
+            }
+
+            String carModelSelected = (String) modelFilterComboBox.getSelectedItem();
+            assert carModelSelected != null;
+            boolean isModelFilterRequired = !carModelSelected.equalsIgnoreCase("All Models");
+            if (isModelFilterRequired) {
+                filtersToApply.add(CarsFilter.isCarModelEqual(carModelSelected));
+            }
+
+            boolean isPriceFilterRequired = retailPriceFilterCheckBox.isSelected();
+            if (isPriceFilterRequired) {
+                String priceComparator = (String) priceComparisonTypeComboxBox.getSelectedItem();
+                assert priceComparator != null;
+
+                String priceToCompareString = searchByPriceFilterTextBox.getText();
+                try {
+                    double priceToCompare = Double.parseDouble(priceToCompareString);
+                    if (priceComparator.equalsIgnoreCase("<=")) {
+                        filtersToApply.add(CarsFilter.isCarPriceLesserThanEqualTo(priceToCompare));
+                    } else {
+                        filtersToApply.add(CarsFilter.isCarPriceGreaterThanEqualTo(priceToCompare));
+                    }
+                } catch (NumberFormatException ne) {
+                    JOptionPane.showMessageDialog(null, "Please enter valid number for search by price", "Invalid Price", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+
+            boolean isMileageFilterRequired = milageFilterCheckBox.isSelected();
+            if (isMileageFilterRequired) {
+                String mileageComparator = (String) milageComparisonTypeComboxBox.getSelectedItem();
+                assert  mileageComparator != null;
+
+                String mileageToCompareString = searchByMilageFilterTextBox.getText();
+                try {
+                    int mileageToCompare = Integer.parseInt(mileageToCompareString);
+                    if (mileageComparator.equalsIgnoreCase("<=")) {
+                        filtersToApply.add(CarsFilter.isCarMileageLesserThanOrEqualTo(mileageToCompare));
+                    } else {
+                        filtersToApply.add(CarsFilter.isCarMileageGreaterThanOrEqualTo(mileageToCompare));
+                    }
+                } catch (NumberFormatException ne) {
+                    JOptionPane.showMessageDialog(null, "Please enter valid number for search by mileage", "Invalid Mileage", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+
+            // Apply All the filters and Fill the Table
+            fillTable(CarsFilter.ApplyFilters(carsByDealerId, filtersToApply));
+        });
     }
 
     private void createDescriptionPanelComponents() {
@@ -440,8 +537,8 @@ public class IncentiveManagerUI extends JFrame {
 
     private void fillTable(List<Car> cars) {
         // TODO: Rename stuffs properly
-        DefaultTableModel dtm = (DefaultTableModel) scrollPaneCarTable.getModel();
-        dtm.setRowCount(0);
+        DefaultTableModel defaultTableModel = (DefaultTableModel) scrollPaneCarTable.getModel();
+        defaultTableModel.setRowCount(0);
         for (Car car : cars) {
             Vector vector = new Vector();
             vector.add(false);
@@ -452,7 +549,7 @@ public class IncentiveManagerUI extends JFrame {
             vector.add(car.getYear());
             vector.add(car.getMileage());
             vector.add(car.getMSRP());
-            dtm.addRow(vector);
+            defaultTableModel.addRow(vector);
         }
     }
     
@@ -461,6 +558,24 @@ public class IncentiveManagerUI extends JFrame {
         clearAllButton.setFont(new Font("Dialog", Font.BOLD, 12));
         clearAllButton.setBounds(610, 140, 122, 42);
         inventoryPanel.add(clearAllButton);
+
+        clearAllButton.addActionListener(e -> {
+            carCategoryComboBox.setSelectedIndex(0);
+            vinTextBox.setText("");
+            fromYearsComboBox.setSelectedIndex(0);
+            toYearsComboBox.setSelectedIndex(0);
+            makeFilterComboBox.setSelectedIndex(0);
+            modelFilterComboBox.setSelectedIndex(0);
+            retailPriceFilterCheckBox.setSelected(false);
+            priceComparisonTypeComboxBox.setEnabled(false);
+            searchByPriceFilterTextBox.setEnabled(false);
+            searchByPriceFilterTextBox.setText("");
+            milageFilterCheckBox.setSelected(false);
+            milageComparisonTypeComboxBox.setEnabled(false);
+            searchByMilageFilterTextBox.setEnabled(false);
+            searchByMilageFilterTextBox.setText("");
+            fillTable(carsByDealerId);
+        });
     }
 
     private void createSearchButton() {
@@ -542,7 +657,6 @@ public class IncentiveManagerUI extends JFrame {
         modelFilterLabel.setFont(new Font("Dialog", Font.BOLD, 12));
         inventoryPanel.add(modelFilterLabel);
 
-        // TODO: Make This Dynamic
         modelFilterComboBox = new JComboBox<>();
 
         String[] carModels = carsByDealerId
@@ -557,6 +671,29 @@ public class IncentiveManagerUI extends JFrame {
         modelFilterComboBox.setSelectedIndex(0);
         modelFilterComboBox.setBounds(167, 171, 170, 27);
         inventoryPanel.add(modelFilterComboBox);
+
+        makeFilterComboBox.addActionListener( e -> {
+            String carMakeSelected = (String) makeFilterComboBox.getSelectedItem();
+            assert carMakeSelected != null;
+            DefaultComboBoxModel<String> newComboBoxModel;
+            if (carMakeSelected.equalsIgnoreCase("All Makes")) {
+                newComboBoxModel = new DefaultComboBoxModel<>(carsByDealerId
+                        .stream()
+                        .map(Car::getModel)
+                        .distinct()
+                        .toArray(String[]::new));
+            } else {
+                newComboBoxModel = new DefaultComboBoxModel<>(carsByDealerId
+                        .stream()
+                        .filter(car -> car.getMake().equalsIgnoreCase(carMakeSelected))
+                        .map(Car::getModel)
+                        .distinct()
+                        .toArray(String[]::new));
+            }
+            newComboBoxModel.insertElementAt("All Models", 0);
+            modelFilterComboBox.setModel(newComboBoxModel);
+            modelFilterComboBox.setSelectedIndex(0);
+        });
     }
 
     private void createMakeFilterComponents() {
@@ -630,14 +767,14 @@ public class IncentiveManagerUI extends JFrame {
         carCategoryLabel.setBounds(73, 24, 61, 16);
         inventoryPanel.add(carCategoryLabel);
 
-        category = new JComboBox<>();
-        category.addItem("All");
+        carCategoryComboBox = new JComboBox<>();
+        carCategoryComboBox.addItem("All");
         for (CarCategory carCategory : CarCategory.values()) {
-            category.addItem(carCategory.toString());
+            carCategoryComboBox.addItem(carCategory.toString());
         }
 
-        category.setBounds(167, 20, 170, 27);
-        inventoryPanel.add(category);
+        carCategoryComboBox.setBounds(167, 20, 170, 27);
+        inventoryPanel.add(carCategoryComboBox);
     }
 
     private void validateIncentiveDetailsAndCreateIncentiveInstance() {
