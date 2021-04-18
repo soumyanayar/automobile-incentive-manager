@@ -114,7 +114,7 @@ public class IncentiveManagerUI extends JFrame {
     private JButton inventoryPagePreviousButton;
 
     private JButton descriptionPagePreviousButton;
-    private JButton descriptionPageNextButton;
+    private JButton descriptionPageCancelButton;
     private JButton descriptionPagePublishButton;
     private JLabel descriptionPageTitleLabel;
     private JEditorPane descriptionPageTitleEditorPane;
@@ -142,7 +142,7 @@ public class IncentiveManagerUI extends JFrame {
 
         inventoryPanel = new JPanel();
         inventoryPanel.setLayout(null);
-        createIncentivePanelComponents();
+        createInventoryPanelComponents();
         tabbedPane.addTab("Inventory", inventoryPanel);
 
         descriptionPanel = new JPanel();
@@ -156,6 +156,83 @@ public class IncentiveManagerUI extends JFrame {
         this.setVisible(true);
     }
 
+    private void createDetailsPanelComponents() {
+        // Create the components related to start date of the incentive.
+        createStartDateComponents();
+
+        // Create the components related to end date of the incentive.
+        createEndDateComponents();
+
+        // Create the components related to cash discount incentive.
+        createCashDiscountIncentiveComponents();
+
+        // Create the components related to loan incentive.
+        createLoanIncentiveComponents();
+
+        // Create the components related to the rebate incentive.
+        createRebateIncentiveComponents();
+
+        // Create the components related to the leasing incentive.
+        createLeaseIncentiveComponents();
+
+        // Create the components related to navigation of the pages.
+        createNavigationComponentsFromDetailsPage();
+
+        // Add Incentive groups to a radio button group
+        createExclusiveIncentiveGroups();
+
+        // Default behaviour
+        if (cashDicountSectionRadioButton.isSelected()) {
+            enableCashDiscountGroup();
+
+            // Default behavior in Cash Discount group
+            flatRateDiscountRadioButton.setSelected(true);
+            flatRateDiscountTextField.setEnabled(true);
+            flatRateDiscountTextField.setText("");
+            percentageRateDiscountTextField.setText("");
+            percentageRateDiscountTextField.setEnabled(false);
+
+            disableLoanGroup();
+            disableLeaseGroup();
+            disableRebateGroup();
+        }
+    }
+
+    private void createInventoryPanelComponents() {
+        // Create the components related to Category Filter
+        createCarCategoryComponents();
+
+        // Create the components related to VIN Filter
+        createVINFilterComponents();
+
+        // Create the components related to year filter
+        createYearsFilterComponents();
+
+        // Create the components related to make filter
+        createMakeFilterComponents();
+
+        // Create the components related to model filter
+        createModelFilerComponents();
+
+        // Create the components related to price filter
+        createPriceFilterComponents();
+
+        // Create the components related to miles filter
+        createMilesFilterComponents();
+
+        // Create the search button
+        createSearchButton();
+
+        // Create the cleaAll button
+        createClearAllButton();
+
+        // Create scroll pane of car table
+        createScrollPaneCarTable();
+
+        // create navigation buttons();
+        createInventoryPageNavigationButtons();
+    }
+
     private void createDescriptionPanelComponents() {
         // Create Title Components
         createDescriptionPageTitleComponents();
@@ -166,11 +243,11 @@ public class IncentiveManagerUI extends JFrame {
         // Create Disclaimer Components
         createDescriptionPageDisclaimerComponents();
 
+        // Default disclaimer content
+        createDefaultDisclaimerComponents();
+
         // Create Description Page Navigation Buttons
         createDescriptionPageNavigationButtons();
-
-        //default disclaimer content
-        createDefaultDisclaimerComponents();
     }
 
     private void createDefaultDisclaimerComponents() {
@@ -239,87 +316,6 @@ public class IncentiveManagerUI extends JFrame {
         descriptionPageTitleEditorPane.addFocusListener(titleWatermark);
     }
 
-    private void createDetailsPanelComponents() {
-        // Create the components related to start date of the incentive.
-        createStartDateComponents();
-
-        // Create the components related to end date of the incentive.
-        createEndDateComponents();
-
-        // Create the components related to cash discount incentive.
-        createCashDiscountIncentiveComponents();
-
-        // Create the components related to loan incentive.
-        createLoanIncentiveComponents();
-
-        // Create the components related to the rebate incentive.
-        createRebateIncentiveComponents();
-
-        // Create the components related to the leasing incentive.
-        createLeaseIncentiveComponents();
-
-        // Create the components related to navigation of the pages.
-        createNavigationComponentsFromDetailsPage();
-
-        // Add Incentive groups to a radio button group
-        createExclusiveIncentiveGroups();
-
-        addButtonClickActionListenerToNextButton();
-
-        addButtonClickActionListenerToCancelButton();
-
-        // Default behaviour
-        if (cashDicountSectionRadioButton.isSelected()) {
-            enableCashDiscountGroup();
-
-            // Default behavior in Cash Discount group
-            flatRateDiscountRadioButton.setSelected(true);
-            flatRateDiscountTextField.setEnabled(true);
-            flatRateDiscountTextField.setText("");
-            percentageRateDiscountTextField.setText("");
-            percentageRateDiscountTextField.setEnabled(false);
-
-            disableLoanGroup();
-            disableLeaseGroup();
-            disableRebateGroup();
-        }
-    }
-
-    private void createIncentivePanelComponents() {
-        // Create the components related to Category Filter
-        createCarCategoryComponents();
-
-        // Create the components related to VIN Filter
-        createVINFilterComponents();
-
-        // Create the components related to year filter
-        createYearsFilterComponents();
-
-        // Create the components related to make filter
-        createMakeFilterComponents();
-
-        // Create the components related to model filter
-        createModelFilerComponents();
-
-        // Create the components related to price filter
-        createPriceFilterComponents();
-
-        // Create the components related to miles filter
-        createMilesFilterComponents();
-
-        // Create the search button
-        createSearchButton();
-
-        // Create the cleaAll button
-        createClearAllButton();
-
-        // Create scroll pane of car table
-        createScrollPaneCarTable();
-
-        // create navigation buttons();
-        createInventoryPageNavigationButtons();
-    }
-
     public void createDescriptionPageNavigationButtons()
     {
         descriptionPagePreviousButton = new JButton("Previous");
@@ -327,15 +323,31 @@ public class IncentiveManagerUI extends JFrame {
         descriptionPagePreviousButton.setFont(new Font("Dialog", Font.BOLD, 12));
         descriptionPanel.add(descriptionPagePreviousButton);
 
-        descriptionPageNextButton = new JButton("Cancel");
-        descriptionPageNextButton.setBounds(370, 448, 117, 29);
-        descriptionPageNextButton.setFont(new Font("Dialog", Font.BOLD, 12));
-        descriptionPanel.add(descriptionPageNextButton);
+        descriptionPagePreviousButton.addActionListener(e -> {
+            tabbedPane.setSelectedComponent(inventoryPanel);
+        });
+
+        descriptionPageCancelButton = new JButton("Cancel");
+        descriptionPageCancelButton.setBounds(370, 448, 117, 29);
+        descriptionPageCancelButton.setFont(new Font("Dialog", Font.BOLD, 12));
+        descriptionPanel.add(descriptionPageCancelButton);
+
+        descriptionPageCancelButton.addActionListener(e -> {
+            // Change later
+            System.exit(0);
+        });
 
         descriptionPagePublishButton = new JButton("Publish Incentive");
         descriptionPagePublishButton.setBounds(570, 448, 130, 29);
         descriptionPagePublishButton.setFont(new Font("Dialog", Font.BOLD, 12));
         descriptionPanel.add(descriptionPagePublishButton);
+
+        descriptionPagePublishButton.addActionListener(e -> {
+            validateCreateAndPublishIncentive();
+        });
+    }
+
+    private void validateCreateAndPublishIncentive() {
     }
 
     private void createInventoryPageNavigationButtons() {
@@ -344,15 +356,32 @@ public class IncentiveManagerUI extends JFrame {
         inventoryPagePreviousButton.setFont(new Font("Dialog", Font.BOLD, 12));
         inventoryPanel.add(inventoryPagePreviousButton);
 
+        inventoryPagePreviousButton.addActionListener(e -> {
+            tabbedPane.setSelectedComponent(detailsPanel);
+        });
+
         inventoryPageCancelButton = new JButton("Cancel");
         inventoryPageCancelButton.setBounds(370, 448, 117, 29);
         inventoryPageCancelButton.setFont(new Font("Dialog", Font.BOLD, 12));
         inventoryPanel.add(inventoryPageCancelButton);
 
+        inventoryPageCancelButton.addActionListener(e -> {
+            // Change later
+            System.exit(0);
+        });
+
         inventoryPageNextButton = new JButton("Next");
         inventoryPageNextButton.setBounds(570, 448, 117, 29);
         inventoryPageNextButton.setFont(new Font("Dialog", Font.BOLD, 12));
         inventoryPanel.add(inventoryPageNextButton);
+
+        inventoryPageNextButton.addActionListener(e -> {
+            validateInventoryDetailsForIncentives();
+        });
+    }
+
+    private void validateInventoryDetailsForIncentives() {
+
     }
 
     private void createScrollPaneCarTable() {
@@ -390,7 +419,6 @@ public class IncentiveManagerUI extends JFrame {
                 return getValueAt(0, c).getClass();
             }
         });
-
 
         scrollPane.setViewportView(scrollPaneCarTable);
     }
@@ -558,25 +586,6 @@ public class IncentiveManagerUI extends JFrame {
 
         category.setBounds(167, 20, 170, 27);
         inventoryPanel.add(category);
-    }
-
-
-
-    private void addButtonClickActionListenerToCancelButton() {
-        detailsPageCancelButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // Change later
-                System.exit(0);
-            }
-        });
-    }
-
-    private void addButtonClickActionListenerToNextButton() {
-        detailsPageNextButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                validateIncentiveDetailsAndCreateIncentiveInstance();
-            }
-        });
     }
 
     private void validateIncentiveDetailsAndCreateIncentiveInstance() {
@@ -817,10 +826,17 @@ public class IncentiveManagerUI extends JFrame {
         detailsPageCancelButton.setFont(new Font("Dialog", Font.BOLD, 12));
         detailsPanel.add(detailsPageCancelButton);
 
+        detailsPageCancelButton.addActionListener(e -> {
+            // Change later
+            System.exit(0);
+        });
+
         detailsPageNextButton = new JButton("Next");
         detailsPageNextButton.setBounds(450, 448, 117, 29);
         detailsPageNextButton.setFont(new Font("Dialog", Font.BOLD, 12));
         detailsPanel.add(detailsPageNextButton);
+
+        detailsPageNextButton.addActionListener(e -> validateIncentiveDetailsAndCreateIncentiveInstance());
     }
 
     public void enableLeaseGroup() {
