@@ -72,8 +72,8 @@ public class IncentiveManagerUI extends JFrame {
     private JTextField leaseMonthlyPaymentInDollarsTextBox;
     private JTextField leaseDurationInMonthsTextBox;
     private JTextField leaseSigningAmountTextBox;
-    private JButton detailsPageCancelButton;
     private JButton detailsPageNextButton;
+    private JButton detailsPageCancelButton;
 
     private ButtonGroup incentiveGroups;
 
@@ -113,6 +113,10 @@ public class IncentiveManagerUI extends JFrame {
     private JButton inventoryPageNextButton;
     private JButton inventoryPagePreviousButton;
 
+    private JButton descriptionPagePreviousButton;
+    private JButton descriptionPageNextButton;
+    private JButton descriptionPagePublishButton;
+
 
     public IncentiveManagerUI() {
         this.setTitle("Create Incentive");
@@ -136,12 +140,19 @@ public class IncentiveManagerUI extends JFrame {
         tabbedPane.addTab("Inventory", inventoryPanel);
 
         descriptionPanel = new JPanel();
+        descriptionPanel.setLayout(null);
+        createDescriptionPanelComponents();
         tabbedPane.addTab("Description", descriptionPanel);
 
         tabbedPane.setSelectedComponent(detailsPanel);
 
         mainPanel.add(tabbedPane);
         this.setVisible(true);
+    }
+
+    private void createDescriptionPanelComponents() {
+        // Create Description Page Navigation Buttons
+        createDescriptionPageNavigationButtons();
     }
 
     private void createDetailsPanelComponents() {
@@ -225,17 +236,38 @@ public class IncentiveManagerUI extends JFrame {
         createInventoryPageNavigationButtons();
     }
 
+    public void createDescriptionPageNavigationButtons()
+    {
+        descriptionPagePreviousButton = new JButton("Previous");
+        descriptionPagePreviousButton.setBounds(170, 448, 117, 29);
+        descriptionPagePreviousButton.setFont(new Font("Dialog", Font.BOLD, 12));
+        descriptionPanel.add(descriptionPagePreviousButton);
+
+        descriptionPageNextButton = new JButton("Cancel");
+        descriptionPageNextButton.setBounds(370, 448, 117, 29);
+        descriptionPageNextButton.setFont(new Font("Dialog", Font.BOLD, 12));
+        descriptionPanel.add(descriptionPageNextButton);
+
+        descriptionPagePublishButton = new JButton("Publish Incentive");
+        descriptionPagePublishButton.setBounds(570, 448, 130, 29);
+        descriptionPagePublishButton.setFont(new Font("Dialog", Font.BOLD, 12));
+        descriptionPanel.add(descriptionPagePublishButton);
+    }
+
     private void createInventoryPageNavigationButtons() {
         inventoryPagePreviousButton = new JButton("Previous");
         inventoryPagePreviousButton.setBounds(170, 448, 117, 29);
+        inventoryPagePreviousButton.setFont(new Font("Dialog", Font.BOLD, 12));
         inventoryPanel.add(inventoryPagePreviousButton);
 
         inventoryPageCancelButton = new JButton("Cancel");
         inventoryPageCancelButton.setBounds(370, 448, 117, 29);
+        inventoryPageCancelButton.setFont(new Font("Dialog", Font.BOLD, 12));
         inventoryPanel.add(inventoryPageCancelButton);
 
         inventoryPageNextButton = new JButton("Next");
         inventoryPageNextButton.setBounds(570, 448, 117, 29);
+        inventoryPageNextButton.setFont(new Font("Dialog", Font.BOLD, 12));
         inventoryPanel.add(inventoryPageNextButton);
     }
 
@@ -296,17 +328,17 @@ public class IncentiveManagerUI extends JFrame {
     private void createMilesFilterComponents() {
         milageFilterCheckBox = new JCheckBox("Mileage");
         milageFilterCheckBox.setFont(new Font("Dialog", Font.BOLD, 12));
-        milageFilterCheckBox.setBounds(420, 86, 122, 16);
+        milageFilterCheckBox.setBounds(420, 94, 122, 16);
         milageFilterCheckBox.setFont(new Font("Dialog", Font.BOLD, 12));
         inventoryPanel.add(milageFilterCheckBox);
 
         milageComparisonTypeComboxBox = new JComboBox<>();
         milageComparisonTypeComboxBox.setModel(new DefaultComboBoxModel<>(new String[] { "<=", ">="}));
-        milageComparisonTypeComboxBox.setBounds(550, 83, 75, 27);
+        milageComparisonTypeComboxBox.setBounds(550, 91, 75, 27);
         inventoryPanel.add(milageComparisonTypeComboxBox);
 
         searchByMilageFilterTextBox = new JTextField();
-        searchByMilageFilterTextBox.setBounds(650, 84, 100, 26);
+        searchByMilageFilterTextBox.setBounds(650, 92, 100, 26);
         inventoryPanel.add(searchByMilageFilterTextBox);
         searchByMilageFilterTextBox.setColumns(10);
     }
@@ -669,10 +701,12 @@ public class IncentiveManagerUI extends JFrame {
     private void createNavigationComponentsFromDetailsPage() {
         detailsPageCancelButton = new JButton("Cancel");
         detailsPageCancelButton.setBounds(250, 448, 117, 29);
+        detailsPageCancelButton.setFont(new Font("Dialog", Font.BOLD, 12));
         detailsPanel.add(detailsPageCancelButton);
 
         detailsPageNextButton = new JButton("Next");
         detailsPageNextButton.setBounds(450, 448, 117, 29);
+        detailsPageNextButton.setFont(new Font("Dialog", Font.BOLD, 12));
         detailsPanel.add(detailsPageNextButton);
     }
 
@@ -942,6 +976,7 @@ public class IncentiveManagerUI extends JFrame {
     private void createStartDateComponents() {
         startDateTextBox = new JTextField();
         startDateTextBox.setBounds(184, 26, 89, 30);
+        startDateTextBox.setFont(new Font("Dialog", Font.BOLD, 12));
 
         startDateCalendarPanel = new CalendarPanel(startDateTextBox, "yyyy/MM/dd");
         startDateCalendarPanel.initCalendarPanel();
@@ -949,7 +984,7 @@ public class IncentiveManagerUI extends JFrame {
         detailsPanel.add(startDateTextBox);
 
         startDateLabel = new JLabel("Start Date");
-        startDateLabel.setFont(new Font("Dialog", Font.BOLD, 15));
+        startDateLabel.setFont(new Font("Dialog", Font.BOLD, 14));
         startDateLabel.setBounds(68, 26, 89, 30);
         detailsPanel.add(startDateLabel);
     }
@@ -957,6 +992,7 @@ public class IncentiveManagerUI extends JFrame {
     private void createEndDateComponents() {
         endDateTextBox = new JTextField();
         endDateTextBox.setBounds(551, 26, 89, 30);
+        endDateTextBox.setFont(new Font("Dialog", Font.BOLD, 12));
 
         endDateCalendarPanel = new CalendarPanel(endDateTextBox, "yyyy/MM/dd");
         endDateCalendarPanel.initCalendarPanel();
@@ -964,7 +1000,7 @@ public class IncentiveManagerUI extends JFrame {
         detailsPanel.add(endDateTextBox);
 
         endDateLabel = new JLabel("End Date");
-        endDateLabel.setFont(new Font("Dialog", Font.BOLD, 15));
+        endDateLabel.setFont(new Font("Dialog", Font.BOLD, 14));
         endDateLabel.setBounds(432, 26, 89, 30);
         detailsPanel.add(endDateLabel);
     }
