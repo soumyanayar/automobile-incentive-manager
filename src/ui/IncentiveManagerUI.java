@@ -8,8 +8,6 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.text.ParseException;
 import java.time.Year;
 import java.util.Date;
@@ -97,10 +95,10 @@ public class IncentiveManagerUI extends JFrame {
     private JComboBox<String> modelFilterComboBox;
 
     private JLabel searchByLabel;
-    private JLabel retailPriceFilerLabel;
+    private JCheckBox retailPriceFilterCheckBox;
     private JComboBox<String> priceComparisonTypeComboxBox;
     private JTextField searchByPriceFilterTextBox;
-    private JLabel milageFilterLabel;
+    private JCheckBox milageFilterCheckBox;
     private JComboBox<String> milageComparisonTypeComboxBox;
     private JTextField searchByMilageFilterTextBox;
 
@@ -248,12 +246,12 @@ public class IncentiveManagerUI extends JFrame {
                 // TODO: Write Code to Select All from the table
             }
         });
-        selectAllCheckBox.setBounds(773, 200, 128, 23);
+        selectAllCheckBox.setBounds(25, 425, 128, 23);
         selectAllCheckBox.setFont(new Font("Dialog", Font.BOLD, 12));
         inventoryPanel.add(selectAllCheckBox);
         
         scrollPane = new JScrollPane();
-        scrollPane.setBounds(25, 230, 829, 210);
+        scrollPane.setBounds(25, 210, 829, 210);
         inventoryPanel.add(scrollPane);
 
         Vector<String> headerNames=new Vector<>();
@@ -284,31 +282,31 @@ public class IncentiveManagerUI extends JFrame {
     private void createClearAllButton() {
         clearAllButton = new JButton("Clear All");
         clearAllButton.setFont(new Font("Dialog", Font.BOLD, 12));
-        clearAllButton.setBounds(546, 170, 122, 42);
+        clearAllButton.setBounds(610, 140, 122, 42);
         inventoryPanel.add(clearAllButton);
     }
 
     private void createSearchButton() {
         searchButton = new JButton("Search");
         searchButton.setFont(new Font("Dialog", Font.BOLD, 12));
-        searchButton.setBounds(396, 170, 122, 42);
+        searchButton.setBounds(440, 140, 122, 42);
         inventoryPanel.add(searchButton);
     }
 
     private void createMilesFilterComponents() {
-        milageFilterLabel = new JLabel("Mileage");
-        milageFilterLabel.setFont(new Font("Dialog", Font.BOLD, 12));
-        milageFilterLabel.setBounds(420, 117, 122, 16);
-        milageFilterLabel.setFont(new Font("Dialog", Font.BOLD, 12));
-        inventoryPanel.add(milageFilterLabel);
+        milageFilterCheckBox = new JCheckBox("Mileage");
+        milageFilterCheckBox.setFont(new Font("Dialog", Font.BOLD, 12));
+        milageFilterCheckBox.setBounds(420, 86, 122, 16);
+        milageFilterCheckBox.setFont(new Font("Dialog", Font.BOLD, 12));
+        inventoryPanel.add(milageFilterCheckBox);
 
         milageComparisonTypeComboxBox = new JComboBox<>();
         milageComparisonTypeComboxBox.setModel(new DefaultComboBoxModel<>(new String[] { "<=", ">="}));
-        milageComparisonTypeComboxBox.setBounds(610, 117, 75, 27);
+        milageComparisonTypeComboxBox.setBounds(550, 83, 75, 27);
         inventoryPanel.add(milageComparisonTypeComboxBox);
 
         searchByMilageFilterTextBox = new JTextField();
-        searchByMilageFilterTextBox.setBounds(701, 117, 100, 26);
+        searchByMilageFilterTextBox.setBounds(650, 84, 100, 26);
         inventoryPanel.add(searchByMilageFilterTextBox);
         searchByMilageFilterTextBox.setColumns(10);
     }
@@ -319,44 +317,45 @@ public class IncentiveManagerUI extends JFrame {
         searchByLabel.setFont(new Font("Dialog", Font.BOLD, 12));
         inventoryPanel.add(searchByLabel);
 
-        retailPriceFilerLabel = new JLabel("Retail Price ($)");
-        retailPriceFilerLabel.setFont(new Font("Dialog", Font.BOLD, 12));
-        retailPriceFilerLabel.setBounds(420, 64, 85, 16);
-        inventoryPanel.add(retailPriceFilerLabel);
+        retailPriceFilterCheckBox = new JCheckBox("Retail Price ($)");
+        retailPriceFilterCheckBox.setFont(new Font("Dialog", Font.BOLD, 12));
+        retailPriceFilterCheckBox.setBounds(420, 59, 120, 16);
+        inventoryPanel.add(retailPriceFilterCheckBox);
 
         priceComparisonTypeComboxBox = new JComboBox<>();
         priceComparisonTypeComboxBox.setModel(new DefaultComboBoxModel<>(new String[] { "<=", ">="}));
-        priceComparisonTypeComboxBox.setBounds(610, 60, 75, 27);
+        priceComparisonTypeComboxBox.setBounds(550, 55, 75, 27);
         inventoryPanel.add(priceComparisonTypeComboxBox);
 
         searchByPriceFilterTextBox = new JTextField();
-        searchByPriceFilterTextBox.setBounds(701, 59, 100, 26);
+        searchByPriceFilterTextBox.setBounds(650, 57, 100, 26);
         inventoryPanel.add(searchByPriceFilterTextBox);
         searchByPriceFilterTextBox.setColumns(10);
     }
 
     private void createModelFilerComponents() {
         modelFilterLabel = new JLabel("Model");
-        modelFilterLabel.setBounds(73, 182, 61, 16);
+        modelFilterLabel.setBounds(73, 175, 61, 16);
         modelFilterLabel.setFont(new Font("Dialog", Font.BOLD, 12));
         inventoryPanel.add(modelFilterLabel);
 
+        // TODO: Make This Dynamic
         modelFilterComboBox = new JComboBox<>();
-        modelFilterComboBox.setModel(new DefaultComboBoxModel(new String[] {"All Models", "528i", "328i", "Eldorado", "Escalade", "TL", "323i"}));
-        modelFilterComboBox.setBounds(167, 182, 170, 27);
+        modelFilterComboBox.setModel(new DefaultComboBoxModel<>(new String[] {"All Models", "528i", "328i", "Eldorado", "Escalade", "TL", "323i"}));
+        modelFilterComboBox.setBounds(167, 171, 170, 27);
         inventoryPanel.add(modelFilterComboBox);
     }
 
     private void createMakeFilterComponents() {
         makeFilterLabel = new JLabel("Make");
-        makeFilterLabel.setBounds(73, 139, 61, 16);
+        makeFilterLabel.setBounds(73, 137, 61, 16);
         makeFilterLabel.setFont(new Font("Dialog", Font.BOLD, 12));
         inventoryPanel.add(makeFilterLabel);
 
-        // Make This Dynamic
+        // TODO: Make This Dynamic
         makeFilterComboBox = new JComboBox<>();
-        makeFilterComboBox.setModel(new DefaultComboBoxModel(new String[] {"All Makes", "BMW", "Cadillac", "Acura", "Audi", "Buick", "Chevrolet"}));
-        makeFilterComboBox.setBounds(167, 135, 170, 27);
+        makeFilterComboBox.setModel(new DefaultComboBoxModel<>(new String[] {"All Makes", "BMW", "Cadillac", "Acura", "Audi", "Buick", "Chevrolet"}));
+        makeFilterComboBox.setBounds(167, 133, 170, 27);
         inventoryPanel.add(makeFilterComboBox);
     }
 
