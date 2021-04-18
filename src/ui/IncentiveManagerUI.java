@@ -48,6 +48,9 @@ public class IncentiveManagerUI extends JFrame {
     private double leaseSigningAmount;
     private double leaseMonthlyPayment;
 
+    // Parameters related to Inventory List to Apply the Incentive
+    private List<String> carsVINsToApplyIncentive;
+
     private JTextField startDateTextBox;
     private CalendarPanel startDateCalendarPanel;
     private JLabel startDateLabel;
@@ -129,6 +132,7 @@ public class IncentiveManagerUI extends JFrame {
     private JEditorPane descriptionPageDescriptionEditorPane;
     private JLabel descriptionPageDisclaimerLabel;
     private JEditorPane descriptionPageDisclaimerEditorPane;
+
 
 
     public IncentiveManagerUI(DataProvider dataProvider, String dealerId) {
@@ -492,7 +496,18 @@ public class IncentiveManagerUI extends JFrame {
     }
 
     private void validateInventoryDetailsForIncentives() {
-        // TODO
+        DefaultTableModel defaultTableModel = (DefaultTableModel) scrollPaneCarTable.getModel();
+        carsVINsToApplyIncentive = new ArrayList<>();
+        for (int i = 0; i< defaultTableModel.getRowCount(); i++) {
+            if ((Boolean) defaultTableModel.getValueAt(i, 0)) {
+                carsVINsToApplyIncentive.add((String) defaultTableModel.getValueAt(i, 1));
+            }
+        }
+        if (carsVINsToApplyIncentive.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please Select atleast one car to apply the incentive", "Empty Car List for Applying Incentive", JOptionPane.ERROR_MESSAGE);
+        } else {
+            tabbedPane.setSelectedComponent(descriptionPanel);
+        }
     }
 
     private void selectAllItemsAction(boolean select) {
