@@ -419,12 +419,25 @@ public class IncentiveManagerUI extends JFrame {
         milageComparisonTypeComboxBox = new JComboBox<>();
         milageComparisonTypeComboxBox.setModel(new DefaultComboBoxModel<>(new String[] { "<=", ">="}));
         milageComparisonTypeComboxBox.setBounds(550, 91, 75, 27);
+        milageComparisonTypeComboxBox.setEnabled(false);
         inventoryPanel.add(milageComparisonTypeComboxBox);
 
         searchByMilageFilterTextBox = new JTextField();
         searchByMilageFilterTextBox.setBounds(650, 92, 100, 26);
+        searchByMilageFilterTextBox.setEnabled(false);
         inventoryPanel.add(searchByMilageFilterTextBox);
         searchByMilageFilterTextBox.setColumns(10);
+
+        milageFilterCheckBox.addActionListener(e -> {
+            if (milageFilterCheckBox.isSelected()) {
+                milageComparisonTypeComboxBox.setEnabled(true);
+                searchByMilageFilterTextBox.setEnabled(true);
+            } else {
+                milageComparisonTypeComboxBox.setEnabled(false);
+                searchByMilageFilterTextBox.setEnabled(false);
+            }
+            searchByMilageFilterTextBox.setText("");
+        });
     }
 
     private void createPriceFilterComponents() {
@@ -441,12 +454,25 @@ public class IncentiveManagerUI extends JFrame {
         priceComparisonTypeComboxBox = new JComboBox<>();
         priceComparisonTypeComboxBox.setModel(new DefaultComboBoxModel<>(new String[] { "<=", ">="}));
         priceComparisonTypeComboxBox.setBounds(550, 55, 75, 27);
+        priceComparisonTypeComboxBox.setEnabled(false);
         inventoryPanel.add(priceComparisonTypeComboxBox);
 
         searchByPriceFilterTextBox = new JTextField();
         searchByPriceFilterTextBox.setBounds(650, 57, 100, 26);
+        searchByPriceFilterTextBox.setEnabled(false);
         inventoryPanel.add(searchByPriceFilterTextBox);
         searchByPriceFilterTextBox.setColumns(10);
+
+        retailPriceFilterCheckBox.addActionListener(e -> {
+            if (retailPriceFilterCheckBox.isSelected()) {
+                priceComparisonTypeComboxBox.setEnabled(true);
+                searchByPriceFilterTextBox.setEnabled(true);
+            } else {
+                priceComparisonTypeComboxBox.setEnabled(false);
+                searchByPriceFilterTextBox.setEnabled(false);
+            }
+            searchByPriceFilterTextBox.setText("");
+        });
     }
 
     private void createModelFilerComponents() {
@@ -579,6 +605,7 @@ public class IncentiveManagerUI extends JFrame {
                     tabbedPane.setSelectedComponent(inventoryPanel);
                 }
                 break;
+
             case LOAN:
                 boolean isLoanIncentiveParametersValid = validateAndParseLoanIncentiveParameters();
                 if (isLoanIncentiveParametersValid) {
@@ -596,6 +623,8 @@ public class IncentiveManagerUI extends JFrame {
                     JOptionPane.showMessageDialog(null, message);
                     tabbedPane.setSelectedComponent(inventoryPanel);
                 }
+                break;
+
             case LEASE:
                 boolean isLeaseIncentiveParametersValid = validateAndParseLeaseIncentiveParameters();
                 if (isLeaseIncentiveParametersValid) {
@@ -863,9 +892,7 @@ public class IncentiveManagerUI extends JFrame {
         newGradRebateCheckBox.setEnabled(true);
         militaryRebateCheckBox.setSelected(false);
         militaryRebateCheckBox.setEnabled(true);
-        newGradRebateTextBox.setEnabled(true);
         newGradRebateTextBox.setText("");
-        militaryRebateTextBox.setEnabled(true);
         militaryRebateTextBox.setText("");
     }
 
@@ -905,15 +932,31 @@ public class IncentiveManagerUI extends JFrame {
         militaryRebateTextBox.setBounds(688, 190, 63, 26);
         detailsPanel.add(militaryRebateTextBox);
 
-        rebateSectionRadioButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (rebateSectionRadioButton.isSelected()) {
-                    enableRebateGroup();
-                    disableCashDiscountGroup();
-                    disableLoanGroup();
-                    disableLeaseGroup();
-                }
+        rebateSectionRadioButton.addActionListener(e -> {
+            if (rebateSectionRadioButton.isSelected()) {
+                enableRebateGroup();
+                disableCashDiscountGroup();
+                disableLoanGroup();
+                disableLeaseGroup();
             }
+        });
+
+        militaryRebateCheckBox.addActionListener(e -> {
+            if (militaryRebateCheckBox.isSelected()) {
+                militaryRebateTextBox.setEnabled(true);
+            } else {
+                militaryRebateTextBox.setEnabled(false);
+            }
+            militaryRebateTextBox.setText("");
+        });
+
+        newGradRebateCheckBox.addActionListener(e -> {
+            if (newGradRebateCheckBox.isSelected()) {
+                newGradRebateTextBox.setEnabled(true);
+            } else {
+                newGradRebateTextBox.setEnabled(false);
+            }
+            newGradRebateTextBox.setText("");
         });
     }
 
