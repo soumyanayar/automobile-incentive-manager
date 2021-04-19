@@ -1,11 +1,13 @@
 package dataprovider;
 
-import entities.Car;
-import entities.Incentive;
+import entities.*;
 
 import java.util.List;
 
 public interface DataProvider {
     List<Car> getAllCarsByDealerId(String dealerId);
-    void persistIncentive(Incentive incentive);
+    void persistIncentive(CashDiscountIncentive cashDiscountIncentive);
+    void persistIncentive(LoanIncentive loanIncentive);
+    void persistIncentive(LeasingIncentive leasingIncentive);
+    void persistIncentive(RebateIncentive rebateIncentive);
 }
