@@ -932,8 +932,6 @@ public class IncentiveManagerUI extends JFrame {
             case DISCOUNT:
                 boolean isCashCountParametersValid = validateAndParseCashDiscountIncentiveParameters();
                 if (isCashCountParametersValid) {
-                    String message = this.incentiveTypeSelected + "\n" + this.cashDiscountType + "\n" + this.discountFlatAmount + "\n" + this.discountPercentage;
-                    JOptionPane.showMessageDialog(null, message);
                     isDetailsPageParametersValid = true;
                     tabbedPane.setSelectedComponent(inventoryPanel);
                 }
@@ -942,8 +940,6 @@ public class IncentiveManagerUI extends JFrame {
             case LOAN:
                 boolean isLoanIncentiveParametersValid = validateAndParseLoanIncentiveParameters();
                 if (isLoanIncentiveParametersValid) {
-                    String message = this.incentiveTypeSelected + "\n" + this.loanInterestRate + "\n" + this.loanDurationInMonths;
-                    JOptionPane.showMessageDialog(null, message);
                     isDetailsPageParametersValid = true;
                     tabbedPane.setSelectedComponent(inventoryPanel);
                 }
@@ -951,10 +947,6 @@ public class IncentiveManagerUI extends JFrame {
             case REBATE:
                 boolean isRebateIncentiveParametersValid = validateAndParseRebateIncentiveParameters();
                 if (isRebateIncentiveParametersValid) {
-                    String message = this.incentiveTypeSelected + rebateMap.entrySet().stream()
-                            .map(e -> e.getKey() + "=" + e.getValue())
-                            .collect(Collectors.joining("&"));
-                    JOptionPane.showMessageDialog(null, message);
                     isDetailsPageParametersValid = true;
                     tabbedPane.setSelectedComponent(inventoryPanel);
                 }
@@ -963,8 +955,6 @@ public class IncentiveManagerUI extends JFrame {
             case LEASE:
                 boolean isLeaseIncentiveParametersValid = validateAndParseLeaseIncentiveParameters();
                 if (isLeaseIncentiveParametersValid) {
-                    String message = this.incentiveTypeSelected + "\n" + this.leaseDurationInMonths + "\n" + this.leaseSigningAmount + "\n" + this.leaseMonthlyPayment;
-                    JOptionPane.showMessageDialog(null, message);
                     isDetailsPageParametersValid = true;
                     tabbedPane.setSelectedComponent(inventoryPanel);
                 }
