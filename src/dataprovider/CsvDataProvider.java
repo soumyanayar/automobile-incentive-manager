@@ -23,7 +23,7 @@ public class CsvDataProvider implements DataProvider {
 
     @Override
     public List<Car> getAllCarsByDealerId(String dealerId) {
-        String inputDataPath = System.getProperty("user.dir") + "\\src\\dataprovider\\mockedcsvdatabase\\Cars.csv";
+        String inputDataPath = System.getProperty("user.dir") + "/src/dataprovider/mockedcsvdatabase/Cars.csv";
         List<List<String>> records = new ArrayList<>();
         try (Scanner scanner = new Scanner(new File(inputDataPath));) {
             while (scanner.hasNextLine()) {
@@ -55,8 +55,8 @@ public class CsvDataProvider implements DataProvider {
     }
 
     public void persistIncentive(CashDiscountIncentive cashDiscountIncentive) {
-        String incentiveCSVFilePath = System.getProperty("user.dir") + "\\src\\dataprovider\\mockedcsvdatabase\\Incentive.csv";
-        String incentiveVINsCSVFilePath = System.getProperty("user.dir") + "\\src\\dataprovider\\mockedcsvdatabase\\IncentiveVINs.csv";
+        String incentiveCSVFilePath = System.getProperty("user.dir") + "/src/dataprovider/mockedcsvdatabase/Incentive.csv";
+        String incentiveVINsCSVFilePath = System.getProperty("user.dir") + "/src/dataprovider/mockedcsvdatabase/IncentiveVINs.csv";
         try {
             BufferedWriter incentiveBW = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(incentiveCSVFilePath, true), StandardCharsets.UTF_8));
             BufferedWriter incentiveVINsBW = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(incentiveVINsCSVFilePath, true), StandardCharsets.UTF_8));
@@ -107,8 +107,8 @@ public class CsvDataProvider implements DataProvider {
 
     @Override
     public void persistIncentive(LoanIncentive loanIncentive) {
-        String incentiveCSVFilePath = System.getProperty("user.dir") + "\\src\\dataprovider\\mockedcsvdatabase\\Incentive.csv";
-        String incentiveVINsCSVFilePath = System.getProperty("user.dir") + "\\src\\dataprovider\\mockedcsvdatabase\\IncentiveVINs.csv";
+        String incentiveCSVFilePath = System.getProperty("user.dir") + "/src/dataprovider/mockedcsvdatabase/Incentive.csv";
+        String incentiveVINsCSVFilePath = System.getProperty("user.dir") + "/src/dataprovider/mockedcsvdatabase/IncentiveVINs.csv";
         try {
             BufferedWriter incentiveBW = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(incentiveCSVFilePath, true), StandardCharsets.UTF_8));
             BufferedWriter incentiveVINsBW = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(incentiveVINsCSVFilePath, true), StandardCharsets.UTF_8));
@@ -159,8 +159,8 @@ public class CsvDataProvider implements DataProvider {
 
     @Override
     public void persistIncentive(LeasingIncentive leasingIncentive) {
-        String incentiveCSVFilePath = System.getProperty("user.dir") + "\\src\\dataprovider\\mockedcsvdatabase\\Incentive.csv";
-        String incentiveVINsCSVFilePath = System.getProperty("user.dir") + "\\src\\dataprovider\\mockedcsvdatabase\\IncentiveVINs.csv";
+        String incentiveCSVFilePath = System.getProperty("user.dir") + "/src/dataprovider/mockedcsvdatabase/Incentive.csv";
+        String incentiveVINsCSVFilePath = System.getProperty("user.dir") + "/src/dataprovider/mockedcsvdatabase/IncentiveVINs.csv";
         try {
             BufferedWriter incentiveBW = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(incentiveCSVFilePath, true), StandardCharsets.UTF_8));
             BufferedWriter incentiveVINsBW = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(incentiveVINsCSVFilePath, true), StandardCharsets.UTF_8));
@@ -213,9 +213,9 @@ public class CsvDataProvider implements DataProvider {
 
     @Override
     public void persistIncentive(RebateIncentive rebateIncentive) {
-        String incentiveCSVFilePath = System.getProperty("user.dir") + "\\src\\dataprovider\\mockedcsvdatabase\\Incentive.csv";
-        String incentiveVINsCSVFilePath = System.getProperty("user.dir") + "\\src\\dataprovider\\mockedcsvdatabase\\IncentiveVINs.csv";
-        String incentiveRebateMapFilePath = System.getProperty("user.dir") + "\\src\\dataprovider\\mockedcsvdatabase\\IncentiveRebates.csv";
+        String incentiveCSVFilePath = System.getProperty("user.dir") + "/src/dataprovider/mockedcsvdatabase/Incentive.csv";
+        String incentiveVINsCSVFilePath = System.getProperty("user.dir") + "/src/dataprovider/mockedcsvdatabase/IncentiveVINs.csv";
+        String incentiveRebateMapFilePath = System.getProperty("user.dir") + "/src/dataprovider/mockedcsvdatabase/IncentiveRebates.csv";
         try {
             BufferedWriter incentiveBW = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(incentiveCSVFilePath, true), StandardCharsets.UTF_8));
             BufferedWriter incentiveVINsBW = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(incentiveVINsCSVFilePath, true), StandardCharsets.UTF_8));
