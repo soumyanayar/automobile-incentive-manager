@@ -30,6 +30,8 @@ public class IncentiveManagerUI extends JFrame {
     private JPanel descriptionPanel;
 
     private IncentiveType incentiveTypeSelected;
+    private Date incentiveStartDate;
+    private Date incentiveEndDate;
 
     // Parameters related to Discount Type Incentive
     private CashDiscountType cashDiscountType;
@@ -47,6 +49,12 @@ public class IncentiveManagerUI extends JFrame {
     private int leaseDurationInMonths;
     private double leaseSigningAmount;
     private double leaseMonthlyPayment;
+
+    // flag to determine if first page parameters are valid
+    private boolean isDetailsPageParametersValid;
+
+    // flag to determine if inventory page parameters are valid
+    private boolean isInventoryPageParametersValid;
 
     // Parameters related to Inventory List to Apply the Incentive
     private List<String> carsVINsToApplyIncentive;
@@ -132,7 +140,6 @@ public class IncentiveManagerUI extends JFrame {
     private JEditorPane descriptionPageDescriptionEditorPane;
     private JLabel descriptionPageDisclaimerLabel;
     private JEditorPane descriptionPageDisclaimerEditorPane;
-
 
 
     public IncentiveManagerUI(DataProvider dataProvider, String dealerId) {
@@ -325,7 +332,7 @@ public class IncentiveManagerUI extends JFrame {
             boolean isMileageFilterRequired = milageFilterCheckBox.isSelected();
             if (isMileageFilterRequired) {
                 String mileageComparator = (String) milageComparisonTypeComboxBox.getSelectedItem();
-                assert  mileageComparator != null;
+                assert mileageComparator != null;
 
                 String mileageToCompareString = searchByMilageFilterTextBox.getText();
                 try {
@@ -430,8 +437,7 @@ public class IncentiveManagerUI extends JFrame {
         descriptionPageTitleEditorPane.addFocusListener(titleWatermark);
     }
 
-    public void createDescriptionPageNavigationButtons()
-    {
+    public void createDescriptionPageNavigationButtons() {
         descriptionPagePreviousButton = new JButton("Previous");
         descriptionPagePreviousButton.setBounds(170, 448, 117, 29);
         descriptionPagePreviousButton.setFont(new Font("Dialog", Font.BOLD, 12));
@@ -462,7 +468,110 @@ public class IncentiveManagerUI extends JFrame {
     }
 
     private void validateCreateAndPublishIncentive() {
-        // TODO
+        if (!isDetailsPageParametersValid) {
+            JOptionPane.showMessageDialog(null, "Please select valid incentive type details", "Invalid Incentive details", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (!isInventoryPageParametersValid) {
+            JOptionPane.showMessageDialog(null, "Please select valid cars in the inventory page", "Invalid inventory details", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (validateTextLength(descriptionPageTitleEditorPane, 100) && validateTextLength(descriptionPageDescriptionEditorPane, 350) && validateTextLength(descriptionPageDisclaimerEditorPane, 250)) {
+            if (JOptionPane.showConfirmDialog(null, "Create new incentive? ", "Confirmation", JOptionPane.OK_CANCEL_OPTION) == 0) {
+                createIncentiveObjectAndPublish();
+                JOptionPane.showMessageDialog(null, "New Incentive Created", "Confirmation", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, "Incentive Publish Cancelled", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Text field cannot be empty or exceed maximum number of characters.", "Confirmation", 1);
+        }
+    }
+
+    private void createIncentiveObjectAndPublish() {
+        switch (incentiveTypeSelected) {
+            case DISCOUNT:
+                CashDiscountIncentive cashDiscountIncentive =
+                        new CashDiscountIncentive(
+                                UUID.randomUUID().toString(),
+                                this.dealerId,
+                                this.incentiveStartDate,
+                                this.incentiveEndDate,
+                                descriptionPageTitleEditorPane.getText(),
+                                descriptionPageDescriptionEditorPane.getText(),
+                                descriptionPageDisclaimerEditorPane.getText(),
+                                new HashSet<>(carsVINsToApplyIncentive),
+                                cashDiscountType.equals(CashDiscountType.FLATAMOUNT) ? discountFlatAmount : discountPercentage,
+                                cashDiscountType);
+
+                dataProvider.persistIncentive(cashDiscountIncentive);
+
+                break;
+
+            case LOAN:
+                LoanIncentive loanIncentive =
+                        new LoanIncentive(
+                                UUID.randomUUID().toString(),
+                                this.dealerId,
+                                this.incentiveStartDate,
+                                this.incentiveEndDate,
+                                descriptionPageTitleEditorPane.getText(),
+                                descriptionPageDescriptionEditorPane.getText(),
+                                descriptionPageDisclaimerEditorPane.getText(),
+                                new HashSet<>(carsVINsToApplyIncentive),
+                                loanInterestRate,
+                                loanDurationInMonths);
+
+                dataProvider.persistIncentive(loanIncentive);
+
+                break;
+
+            case LEASE:
+                LeasingIncentive leasingIncentive =
+                        new LeasingIncentive(
+                                UUID.randomUUID().toString(),
+                                this.dealerId,
+                                this.incentiveStartDate,
+                                this.incentiveEndDate,
+                                descriptionPageTitleEditorPane.getText(),
+                                descriptionPageDescriptionEditorPane.getText(),
+                                descriptionPageDisclaimerEditorPane.getText(),
+                                new HashSet<>(carsVINsToApplyIncentive),
+                                leaseDurationInMonths,
+                                leaseSigningAmount,
+                                leaseMonthlyPayment);
+
+                dataProvider.persistIncentive(leasingIncentive);
+
+                break;
+
+            case REBATE:
+                RebateIncentive rebateIncentive =
+                        new RebateIncentive(
+                                UUID.randomUUID().toString(),
+                                this.dealerId,
+                                this.incentiveStartDate,
+                                this.incentiveEndDate,
+                                descriptionPageTitleEditorPane.getText(),
+                                descriptionPageDescriptionEditorPane.getText(),
+                                descriptionPageDisclaimerEditorPane.getText(),
+                                new HashSet<>(carsVINsToApplyIncentive),
+                                rebateMap);
+
+                dataProvider.persistIncentive(rebateIncentive);
+
+                break;
+        }
+    }
+
+    // Check if editor planes contains text that is non-empty, and no more than the maximum characters
+    // and text cannot be the watermark text
+    private boolean validateTextLength(JEditorPane plane, int max) {
+        String string = plane.getText();
+        String watermarkText = "Maximum " + max + " characters";
+        return (string != null && string.trim().length() > 0 && string.trim().length() <= max && !string.equals(watermarkText));
     }
 
     private void createInventoryPageNavigationButtons() {
@@ -485,7 +594,7 @@ public class IncentiveManagerUI extends JFrame {
             System.exit(0);
         });
 
-        inventoryPageNextButton = new JButton("Next");
+        inventoryPageNextButton = new JButton("Apply & Next");
         inventoryPageNextButton.setBounds(570, 448, 117, 29);
         inventoryPageNextButton.setFont(new Font("Dialog", Font.BOLD, 12));
         inventoryPanel.add(inventoryPageNextButton);
@@ -498,21 +607,23 @@ public class IncentiveManagerUI extends JFrame {
     private void validateInventoryDetailsForIncentives() {
         DefaultTableModel defaultTableModel = (DefaultTableModel) scrollPaneCarTable.getModel();
         carsVINsToApplyIncentive = new ArrayList<>();
-        for (int i = 0; i< defaultTableModel.getRowCount(); i++) {
+        for (int i = 0; i < defaultTableModel.getRowCount(); i++) {
             if ((Boolean) defaultTableModel.getValueAt(i, 0)) {
                 carsVINsToApplyIncentive.add((String) defaultTableModel.getValueAt(i, 1));
             }
         }
         if (carsVINsToApplyIncentive.isEmpty()) {
+            isDetailsPageParametersValid = false;
             JOptionPane.showMessageDialog(null, "Please Select atleast one car to apply the incentive", "Empty Car List for Applying Incentive", JOptionPane.ERROR_MESSAGE);
         } else {
+            isInventoryPageParametersValid = true;
             tabbedPane.setSelectedComponent(descriptionPanel);
         }
     }
 
     private void selectAllItemsAction(boolean select) {
         DefaultTableModel defaultTableModel = (DefaultTableModel) scrollPaneCarTable.getModel();
-        for (int i = 0; i< defaultTableModel.getRowCount(); i++) {
+        for (int i = 0; i < defaultTableModel.getRowCount(); i++) {
             defaultTableModel.setValueAt(select, i, 0);
         }
     }
@@ -527,12 +638,12 @@ public class IncentiveManagerUI extends JFrame {
         selectAllCheckBox.setBounds(25, 425, 128, 23);
         selectAllCheckBox.setFont(new Font("Dialog", Font.BOLD, 12));
         inventoryPanel.add(selectAllCheckBox);
-        
+
         scrollPane = new JScrollPane();
         scrollPane.setBounds(25, 210, 829, 210);
         inventoryPanel.add(scrollPane);
 
-        Vector<String> headerNames=new Vector<>();
+        Vector<String> headerNames = new Vector<>();
         headerNames.add("Select");
         headerNames.add("VIN");
         headerNames.add("Category");
@@ -573,7 +684,7 @@ public class IncentiveManagerUI extends JFrame {
             defaultTableModel.addRow(vector);
         }
     }
-    
+
     private void createClearAllButton() {
         clearAllButton = new JButton("Clear All");
         clearAllButton.setFont(new Font("Dialog", Font.BOLD, 12));
@@ -614,7 +725,7 @@ public class IncentiveManagerUI extends JFrame {
         inventoryPanel.add(milageFilterCheckBox);
 
         milageComparisonTypeComboxBox = new JComboBox<>();
-        milageComparisonTypeComboxBox.setModel(new DefaultComboBoxModel<>(new String[] { "<=", ">="}));
+        milageComparisonTypeComboxBox.setModel(new DefaultComboBoxModel<>(new String[]{"<=", ">="}));
         milageComparisonTypeComboxBox.setBounds(550, 91, 75, 27);
         milageComparisonTypeComboxBox.setEnabled(false);
         inventoryPanel.add(milageComparisonTypeComboxBox);
@@ -649,7 +760,7 @@ public class IncentiveManagerUI extends JFrame {
         inventoryPanel.add(retailPriceFilterCheckBox);
 
         priceComparisonTypeComboxBox = new JComboBox<>();
-        priceComparisonTypeComboxBox.setModel(new DefaultComboBoxModel<>(new String[] { "<=", ">="}));
+        priceComparisonTypeComboxBox.setModel(new DefaultComboBoxModel<>(new String[]{"<=", ">="}));
         priceComparisonTypeComboxBox.setBounds(550, 55, 75, 27);
         priceComparisonTypeComboxBox.setEnabled(false);
         inventoryPanel.add(priceComparisonTypeComboxBox);
@@ -681,10 +792,10 @@ public class IncentiveManagerUI extends JFrame {
         modelFilterComboBox = new JComboBox<>();
 
         String[] carModels = carsByDealerId
-                       .stream()
-                       .map(Car::getModel)
-                       .distinct()
-                       .toArray(String[]::new);
+                .stream()
+                .map(Car::getModel)
+                .distinct()
+                .toArray(String[]::new);
 
         DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>(carModels);
         comboBoxModel.insertElementAt("All Models", 0);
@@ -693,7 +804,7 @@ public class IncentiveManagerUI extends JFrame {
         modelFilterComboBox.setBounds(167, 171, 170, 27);
         inventoryPanel.add(modelFilterComboBox);
 
-        makeFilterComboBox.addActionListener( e -> {
+        makeFilterComboBox.addActionListener(e -> {
             String carMakeSelected = (String) makeFilterComboBox.getSelectedItem();
             assert carMakeSelected != null;
             DefaultComboBoxModel<String> newComboBoxModel;
@@ -726,10 +837,10 @@ public class IncentiveManagerUI extends JFrame {
         makeFilterComboBox = new JComboBox<>();
 
         String[] carMakes = carsByDealerId
-                           .stream()
-                           .map(Car::getMake)
-                           .distinct()
-                           .toArray(String[]::new);
+                .stream()
+                .map(Car::getMake)
+                .distinct()
+                .toArray(String[]::new);
 
         DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>(carMakes);
         comboBoxModel.insertElementAt("All Makes", 0);
@@ -811,6 +922,8 @@ public class IncentiveManagerUI extends JFrame {
             return;
         }
 
+        this.incentiveStartDate = startDate;
+        this.incentiveEndDate = endDate;
         this.incentiveTypeSelected = IncentiveType.fromString(incentiveGroups.getSelection().getActionCommand());
 
         assert this.incentiveTypeSelected != null;
@@ -821,6 +934,7 @@ public class IncentiveManagerUI extends JFrame {
                 if (isCashCountParametersValid) {
                     String message = this.incentiveTypeSelected + "\n" + this.cashDiscountType + "\n" + this.discountFlatAmount + "\n" + this.discountPercentage;
                     JOptionPane.showMessageDialog(null, message);
+                    isDetailsPageParametersValid = true;
                     tabbedPane.setSelectedComponent(inventoryPanel);
                 }
                 break;
@@ -830,6 +944,7 @@ public class IncentiveManagerUI extends JFrame {
                 if (isLoanIncentiveParametersValid) {
                     String message = this.incentiveTypeSelected + "\n" + this.loanInterestRate + "\n" + this.loanDurationInMonths;
                     JOptionPane.showMessageDialog(null, message);
+                    isDetailsPageParametersValid = true;
                     tabbedPane.setSelectedComponent(inventoryPanel);
                 }
                 break;
@@ -840,6 +955,7 @@ public class IncentiveManagerUI extends JFrame {
                             .map(e -> e.getKey() + "=" + e.getValue())
                             .collect(Collectors.joining("&"));
                     JOptionPane.showMessageDialog(null, message);
+                    isDetailsPageParametersValid = true;
                     tabbedPane.setSelectedComponent(inventoryPanel);
                 }
                 break;
@@ -849,12 +965,14 @@ public class IncentiveManagerUI extends JFrame {
                 if (isLeaseIncentiveParametersValid) {
                     String message = this.incentiveTypeSelected + "\n" + this.leaseDurationInMonths + "\n" + this.leaseSigningAmount + "\n" + this.leaseMonthlyPayment;
                     JOptionPane.showMessageDialog(null, message);
+                    isDetailsPageParametersValid = true;
                     tabbedPane.setSelectedComponent(inventoryPanel);
                 }
                 break;
 
             default:
                 JOptionPane.showMessageDialog(null, "Please select valid incentive Type", "Invalid Incentive type", JOptionPane.ERROR_MESSAGE);
+                isDetailsPageParametersValid = false;
         }
     }
 
@@ -1041,7 +1159,7 @@ public class IncentiveManagerUI extends JFrame {
             System.exit(0);
         });
 
-        detailsPageNextButton = new JButton("Next");
+        detailsPageNextButton = new JButton("Apply & Next");
         detailsPageNextButton.setBounds(450, 448, 117, 29);
         detailsPageNextButton.setFont(new Font("Dialog", Font.BOLD, 12));
         detailsPanel.add(detailsPageNextButton);
