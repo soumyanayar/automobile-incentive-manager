@@ -6,7 +6,7 @@ import java.sql.*;
 import java.sql.Date;
 import java.util.*;
 
-public class MsSqlDataProvider {
+public class MsSqlDataProvider implements DataProvider{
     private static final String URL
             = "jdbc:sqlserver://guiyu.database.windows.net:1433;databaseName=test2";
     private static final String USERNAME = "guiyu";
@@ -74,167 +74,162 @@ public class MsSqlDataProvider {
                 "rebateValue DECIMAL NOT NULL)");
     }
 
-    public void persistIncentive(CashDiscountIncentive cashDiscountIncentive) throws SQLException {
+    @Override
+    public List<Car> getAllCarsByDealerId(String dealerId) {
+        return null;
+    }
+
+    public void persistIncentive(CashDiscountIncentive cashDiscountIncentive) {
         String carVinUUID = UUID.randomUUID().toString();
         String sql = "INSERT INTO Incentive(id, incentiveType, dealerId, startDate, endDate, title, description, disclaimer, carVinUUID, " +
                 "cashDiscountType, discountValue) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
-        PreparedStatement preparedStatement = this.dbConnection.prepareStatement(sql);
-        preparedStatement.setString(1, cashDiscountIncentive.getId());
-        preparedStatement.setString(2, cashDiscountIncentive.getIncentiveType().toString());
-        preparedStatement.setString(3, cashDiscountIncentive.getDealerId());
-        preparedStatement.setDate(4, new java.sql.Date(cashDiscountIncentive.getStartDate().getTime()));
-        preparedStatement.setDate(5, new java.sql.Date(cashDiscountIncentive.getEndDate().getTime()));
-        preparedStatement.setString(6, cashDiscountIncentive.getTitle());
-        preparedStatement.setString(7, cashDiscountIncentive.getDescription());
-        preparedStatement.setString(8, cashDiscountIncentive.getDisclaimer());
-        preparedStatement.setString(9, carVinUUID);
-        preparedStatement.setString(10, cashDiscountIncentive.getCashDiscountType().toString());
-        preparedStatement.setDouble(11, cashDiscountIncentive.getValue());
-        preparedStatement.execute();
-
-        sql = "INSERT INTO IncentiveVINs(incentiveVinID, carVIN) VALUES (?, ?)";
-        preparedStatement = this.dbConnection.prepareStatement(sql);
-        for (String carVIN : cashDiscountIncentive.getCarVINList()) {
-            preparedStatement.setString(1, carVinUUID);
-            preparedStatement.setString(2, carVIN);
+        try {
+            PreparedStatement preparedStatement = this.dbConnection.prepareStatement(sql);
+            preparedStatement.setString(1, cashDiscountIncentive.getId());
+            preparedStatement.setString(2, cashDiscountIncentive.getIncentiveType().toString());
+            preparedStatement.setString(3, cashDiscountIncentive.getDealerId());
+            preparedStatement.setDate(4, new java.sql.Date(cashDiscountIncentive.getStartDate().getTime()));
+            preparedStatement.setDate(5, new java.sql.Date(cashDiscountIncentive.getEndDate().getTime()));
+            preparedStatement.setString(6, cashDiscountIncentive.getTitle());
+            preparedStatement.setString(7, cashDiscountIncentive.getDescription());
+            preparedStatement.setString(8, cashDiscountIncentive.getDisclaimer());
+            preparedStatement.setString(9, carVinUUID);
+            preparedStatement.setString(10, cashDiscountIncentive.getCashDiscountType().toString());
+            preparedStatement.setDouble(11, cashDiscountIncentive.getValue());
             preparedStatement.execute();
+
+            sql = "INSERT INTO IncentiveVINs(incentiveVinID, carVIN) VALUES (?, ?)";
+            preparedStatement = this.dbConnection.prepareStatement(sql);
+            for (String carVIN : cashDiscountIncentive.getCarVINList()) {
+                preparedStatement.setString(1, carVinUUID);
+                preparedStatement.setString(2, carVIN);
+                preparedStatement.execute();
+            }
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
         }
     }
 
-    public void persistIncentive(LoanIncentive loanDiscountIncentive) throws SQLException {
+    public void persistIncentive(LoanIncentive loanDiscountIncentive) {
         String carVinUUID = UUID.randomUUID().toString();
         String sql = "INSERT INTO Incentive(id, incentiveType, dealerId, startDate, endDate, title, description, disclaimer, carVinUUID, " +
                 "apr, loanmonths) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
-        PreparedStatement preparedStatement = this.dbConnection.prepareStatement(sql);
-        preparedStatement.setString(1, loanDiscountIncentive.getId());
-        preparedStatement.setString(2, loanDiscountIncentive.getIncentiveType().toString());
-        preparedStatement.setString(3, loanDiscountIncentive.getDealerId());
-        preparedStatement.setDate(4, new java.sql.Date(loanDiscountIncentive.getStartDate().getTime()));
-        preparedStatement.setDate(5, new java.sql.Date(loanDiscountIncentive.getEndDate().getTime()));
-        preparedStatement.setString(6, loanDiscountIncentive.getTitle());
-        preparedStatement.setString(7, loanDiscountIncentive.getDescription());
-        preparedStatement.setString(8, loanDiscountIncentive.getDisclaimer());
-        preparedStatement.setString(9, carVinUUID);
-        preparedStatement.setDouble(10, loanDiscountIncentive.getApr());
-        preparedStatement.setInt(11, loanDiscountIncentive.getMonths());
-        preparedStatement.execute();
-
-        sql = "INSERT INTO IncentiveVINs(incentiveVinID, carVIN) VALUES (?, ?)";
-        preparedStatement = this.dbConnection.prepareStatement(sql);
-        for (String carVIN : loanDiscountIncentive.getCarVINList()) {
-            preparedStatement.setString(1, carVinUUID);
-            preparedStatement.setString(2, carVIN);
+        try {
+            PreparedStatement preparedStatement = this.dbConnection.prepareStatement(sql);
+            preparedStatement.setString(1, loanDiscountIncentive.getId());
+            preparedStatement.setString(2, loanDiscountIncentive.getIncentiveType().toString());
+            preparedStatement.setString(3, loanDiscountIncentive.getDealerId());
+            preparedStatement.setDate(4, new java.sql.Date(loanDiscountIncentive.getStartDate().getTime()));
+            preparedStatement.setDate(5, new java.sql.Date(loanDiscountIncentive.getEndDate().getTime()));
+            preparedStatement.setString(6, loanDiscountIncentive.getTitle());
+            preparedStatement.setString(7, loanDiscountIncentive.getDescription());
+            preparedStatement.setString(8, loanDiscountIncentive.getDisclaimer());
+            preparedStatement.setString(9, carVinUUID);
+            preparedStatement.setDouble(10, loanDiscountIncentive.getApr());
+            preparedStatement.setInt(11, loanDiscountIncentive.getMonths());
             preparedStatement.execute();
+
+            sql = "INSERT INTO IncentiveVINs(incentiveVinID, carVIN) VALUES (?, ?)";
+            preparedStatement = this.dbConnection.prepareStatement(sql);
+            for (String carVIN : loanDiscountIncentive.getCarVINList()) {
+                preparedStatement.setString(1, carVinUUID);
+                preparedStatement.setString(2, carVIN);
+                preparedStatement.execute();
+            }
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
         }
     }
 
-    public void persistIncentive(LeasingIncentive leasingIncentive) throws SQLException {
+    public void persistIncentive(LeasingIncentive leasingIncentive) {
         String carVinUUID = UUID.randomUUID().toString();
         String sql = "INSERT INTO Incentive(id, incentiveType, dealerId, startDate, endDate, title, description, disclaimer, carVinUUID, " +
                 "leasemonths, signingPay, monthlyPay) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
-        PreparedStatement preparedStatement = this.dbConnection.prepareStatement(sql);
-        preparedStatement.setString(1, leasingIncentive.getId());
-        preparedStatement.setString(2, leasingIncentive.getIncentiveType().toString());
-        preparedStatement.setString(3, leasingIncentive.getDealerId());
-        preparedStatement.setDate(4, new java.sql.Date(leasingIncentive.getStartDate().getTime()));
-        preparedStatement.setDate(5, new java.sql.Date(leasingIncentive.getEndDate().getTime()));
-        preparedStatement.setString(6, leasingIncentive.getTitle());
-        preparedStatement.setString(7, leasingIncentive.getDescription());
-        preparedStatement.setString(8, leasingIncentive.getDisclaimer());
-        preparedStatement.setString(9, carVinUUID);
-        preparedStatement.setInt(10, leasingIncentive.getMonths());
-        preparedStatement.setDouble(11, leasingIncentive.getSigningPay());
-        preparedStatement.setDouble(12, leasingIncentive.getMonthlyPay());
-        preparedStatement.execute();
-
-        sql = "INSERT INTO IncentiveVINs(incentiveVinID, carVIN) VALUES (?, ?)";
-        preparedStatement = this.dbConnection.prepareStatement(sql);
-        for (String carVIN : leasingIncentive.getCarVINList()) {
-            preparedStatement.setString(1, carVinUUID);
-            preparedStatement.setString(2, carVIN);
+        try {
+            PreparedStatement preparedStatement = this.dbConnection.prepareStatement(sql);
+            preparedStatement.setString(1, leasingIncentive.getId());
+            preparedStatement.setString(2, leasingIncentive.getIncentiveType().toString());
+            preparedStatement.setString(3, leasingIncentive.getDealerId());
+            preparedStatement.setDate(4, new java.sql.Date(leasingIncentive.getStartDate().getTime()));
+            preparedStatement.setDate(5, new java.sql.Date(leasingIncentive.getEndDate().getTime()));
+            preparedStatement.setString(6, leasingIncentive.getTitle());
+            preparedStatement.setString(7, leasingIncentive.getDescription());
+            preparedStatement.setString(8, leasingIncentive.getDisclaimer());
+            preparedStatement.setString(9, carVinUUID);
+            preparedStatement.setInt(10, leasingIncentive.getMonths());
+            preparedStatement.setDouble(11, leasingIncentive.getSigningPay());
+            preparedStatement.setDouble(12, leasingIncentive.getMonthlyPay());
             preparedStatement.execute();
+
+            sql = "INSERT INTO IncentiveVINs(incentiveVinID, carVIN) VALUES (?, ?)";
+            preparedStatement = this.dbConnection.prepareStatement(sql);
+            for (String carVIN : leasingIncentive.getCarVINList()) {
+                preparedStatement.setString(1, carVinUUID);
+                preparedStatement.setString(2, carVIN);
+                preparedStatement.execute();
+            }
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
         }
     }
 
-    public void persistIncentive(RebateIncentive rebateIncentive) throws SQLException {
+    public void persistIncentive(RebateIncentive rebateIncentive) {
         String carVinUUID = UUID.randomUUID().toString();
         String rebateMapUUID = UUID.randomUUID().toString();
         String sql = "INSERT INTO Incentive(id, incentiveType, dealerId, startDate, endDate, title, description, disclaimer, carVinUUID, " +
                 "rebateMapUUID) VALUES (?,?,?,?,?,?,?,?,?,?)";
-        PreparedStatement preparedStatement = this.dbConnection.prepareStatement(sql);
-        preparedStatement.setString(1, rebateIncentive.getId());
-        preparedStatement.setString(2, rebateIncentive.getIncentiveType().toString());
-        preparedStatement.setString(3, rebateIncentive.getDealerId());
-        preparedStatement.setDate(4, new java.sql.Date(rebateIncentive.getStartDate().getTime()));
-        preparedStatement.setDate(5, new java.sql.Date(rebateIncentive.getEndDate().getTime()));
-        preparedStatement.setString(6, rebateIncentive.getTitle());
-        preparedStatement.setString(7, rebateIncentive.getDescription());
-        preparedStatement.setString(8, rebateIncentive.getDisclaimer());
-        preparedStatement.setString(9, carVinUUID);
-        preparedStatement.setString(10, rebateMapUUID);
-        preparedStatement.execute();
-
-        sql = "INSERT INTO IncentiveVINs(incentiveVinID, carVIN) VALUES (?, ?)";
-        preparedStatement = this.dbConnection.prepareStatement(sql);
-        for (String carVIN : rebateIncentive.getCarVINList()) {
-            preparedStatement.setString(1, carVinUUID);
-            preparedStatement.setString(2, carVIN);
+        try {
+            PreparedStatement preparedStatement = this.dbConnection.prepareStatement(sql);
+            preparedStatement.setString(1, rebateIncentive.getId());
+            preparedStatement.setString(2, rebateIncentive.getIncentiveType().toString());
+            preparedStatement.setString(3, rebateIncentive.getDealerId());
+            preparedStatement.setDate(4, new java.sql.Date(rebateIncentive.getStartDate().getTime()));
+            preparedStatement.setDate(5, new java.sql.Date(rebateIncentive.getEndDate().getTime()));
+            preparedStatement.setString(6, rebateIncentive.getTitle());
+            preparedStatement.setString(7, rebateIncentive.getDescription());
+            preparedStatement.setString(8, rebateIncentive.getDisclaimer());
+            preparedStatement.setString(9, carVinUUID);
+            preparedStatement.setString(10, rebateMapUUID);
             preparedStatement.execute();
-        }
 
-        sql = "INSERT INTO IncentiveRebates(rebateID, rebateType, rebateValue) VALUES (?, ?, ?)";
-        preparedStatement = this.dbConnection.prepareStatement(sql);
-        for (Map.Entry<String, Double> mapElement : rebateIncentive.getRebateMap().entrySet()) {
-            preparedStatement.setString(1, rebateMapUUID);
-            preparedStatement.setString(2, mapElement.getKey());
-            preparedStatement.setDouble(3, mapElement.getValue());
-            preparedStatement.execute();
+            sql = "INSERT INTO IncentiveVINs(incentiveVinID, carVIN) VALUES (?, ?)";
+            preparedStatement = this.dbConnection.prepareStatement(sql);
+            for (String carVIN : rebateIncentive.getCarVINList()) {
+                preparedStatement.setString(1, carVinUUID);
+                preparedStatement.setString(2, carVIN);
+                preparedStatement.execute();
+            }
+
+            sql = "INSERT INTO IncentiveRebates(rebateID, rebateType, rebateValue) VALUES (?, ?, ?)";
+            preparedStatement = this.dbConnection.prepareStatement(sql);
+            for (Map.Entry<String, Double> mapElement : rebateIncentive.getRebateMap().entrySet()) {
+                preparedStatement.setString(1, rebateMapUUID);
+                preparedStatement.setString(2, mapElement.getKey());
+                preparedStatement.setDouble(3, mapElement.getValue());
+                preparedStatement.execute();
+            }
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
         }
     }
 
+    // For Testing Purpose.
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
         MsSqlDataProvider msSqlDataProvider = MsSqlDataProvider.getInstance();
-        CashDiscountIncentive cashDiscountIncentive = new CashDiscountIncentive(
-                UUID.randomUUID().toString(),
-                UUID.randomUUID().toString(),
-                new Date(System.currentTimeMillis()),
-                new Date(System.currentTimeMillis()),
-                "title1",
-                "description1",
-                "disclaimer1",
-                new HashSet<>(Arrays.asList(UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString())),
-                1000,
-                CashDiscountType.FLATAMOUNT
-        );
 
-        LoanIncentive loanIncentive = new LoanIncentive(
-                UUID.randomUUID().toString(),
-                UUID.randomUUID().toString(),
-                new Date(System.currentTimeMillis()),
-                new Date(System.currentTimeMillis()),
-                "title1",
-                "description1",
-                "disclaimer1",
-                new HashSet<>(Arrays.asList(UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString())),
-                3.4,
-                72
-        );
+        CashDiscountIncentive cashDiscountIncentive = createMockedCashDiscountIncentiveInstance();
+        LoanIncentive loanIncentive = createMockedLoanIncentiveInstance();
+        LeasingIncentive leasingIncentive = createMockedLeasingIncentiveInstance();
+        RebateIncentive rebateIncentive = createMockedRebateIncentiveInstance();
 
-        LeasingIncentive leasingIncentive = new LeasingIncentive(
-                UUID.randomUUID().toString(),
-                UUID.randomUUID().toString(),
-                new Date(System.currentTimeMillis()),
-                new Date(System.currentTimeMillis()),
-                "title1",
-                "description1",
-                "disclaimer1",
-                new HashSet<>(Arrays.asList(UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString())),
-                36,
-                4000.0,
-                500.0
-        );
+        msSqlDataProvider.persistIncentive(cashDiscountIncentive);
+        msSqlDataProvider.persistIncentive(loanIncentive);
+        msSqlDataProvider.persistIncentive(leasingIncentive);
+        msSqlDataProvider.persistIncentive(rebateIncentive);
+    }
 
-        RebateIncentive rebateIncentive = new RebateIncentive(
+    private static RebateIncentive createMockedRebateIncentiveInstance() {
+        return new RebateIncentive(
                 UUID.randomUUID().toString(),
                 UUID.randomUUID().toString(),
                 new Date(System.currentTimeMillis()),
@@ -249,10 +244,52 @@ public class MsSqlDataProvider {
                         put("MilitaryVeteranRebate", 3000.0);
                     }
                 }
-                );
-        msSqlDataProvider.persistIncentive(cashDiscountIncentive);
-        msSqlDataProvider.persistIncentive(loanIncentive);
-        msSqlDataProvider.persistIncentive(leasingIncentive);
-        msSqlDataProvider.persistIncentive(rebateIncentive);
+        );
+    }
+
+    private static LeasingIncentive createMockedLeasingIncentiveInstance() {
+        return new LeasingIncentive(
+                UUID.randomUUID().toString(),
+                UUID.randomUUID().toString(),
+                new Date(System.currentTimeMillis()),
+                new Date(System.currentTimeMillis()),
+                "title1",
+                "description1",
+                "disclaimer1",
+                new HashSet<>(Arrays.asList(UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString())),
+                36,
+                4000.0,
+                500.0
+        );
+    }
+
+    private static LoanIncentive createMockedLoanIncentiveInstance() {
+        return new LoanIncentive(
+                UUID.randomUUID().toString(),
+                UUID.randomUUID().toString(),
+                new Date(System.currentTimeMillis()),
+                new Date(System.currentTimeMillis()),
+                "title1",
+                "description1",
+                "disclaimer1",
+                new HashSet<>(Arrays.asList(UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString())),
+                3.4,
+                72
+        );
+    }
+
+    private static CashDiscountIncentive createMockedCashDiscountIncentiveInstance() {
+        return new CashDiscountIncentive(
+                UUID.randomUUID().toString(),
+                UUID.randomUUID().toString(),
+                new Date(System.currentTimeMillis()),
+                new Date(System.currentTimeMillis()),
+                "title1",
+                "description1",
+                "disclaimer1",
+                new HashSet<>(Arrays.asList(UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString())),
+                1000,
+                CashDiscountType.FLATAMOUNT
+        );
     }
 }
