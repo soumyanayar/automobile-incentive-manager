@@ -3,6 +3,7 @@ package ui;
 import datafilter.CarsFilter;
 import dataprovider.CsvDataProvider;
 import dataprovider.DataProvider;
+import dataprovider.MsSqlDataProvider;
 import entities.*;
 import validators.IncentiveDataValidator;
 
@@ -1470,10 +1471,12 @@ public class IncentiveManagerUI extends JFrame {
         EventQueue.invokeLater(() -> {
             try {
                 UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+                // Use CSV Data Provider
+                // new IncentiveManagerUI(new CsvDataProvider(), "E5301FBD-D4E1-4595-AC90-260228D681A1");
+                // Use MsSql Data Provider
+                new IncentiveManagerUI(MsSqlDataProvider.getInstance(), "E5301FBD-D4E1-4595-AC90-260228D681A1");
             } catch (Exception ex) {
                 ex.printStackTrace();
-            } finally {
-                new IncentiveManagerUI(new CsvDataProvider(), "E5301FBD-D4E1-4595-AC90-260228D681A1");
             }
         });
     }

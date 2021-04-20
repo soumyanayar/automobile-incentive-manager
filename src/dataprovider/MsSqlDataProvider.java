@@ -2,6 +2,8 @@ package dataprovider;
 
 import entities.*;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
@@ -74,11 +76,55 @@ public class MsSqlDataProvider implements DataProvider{
                 "rebateValue DECIMAL NOT NULL)");
     }
 
-    @Override
-    public List<Car> getAllCarsByDealerId(String dealerId) {
-        return null;
+    private List<String> getRecordFromLine(String line) {
+        List<String> values = new ArrayList<>();
+        try (Scanner rowScanner = new Scanner(line)) {
+            rowScanner.useDelimiter(",");
+            while (rowScanner.hasNext()) {
+                values.add(rowScanner.next());
+            }
+        }
+        return values;
     }
 
+    // This method is same as CSV data provider's getAllCarsByDealerId
+    // This whole Data Provider was created to demonstrate how to persist incentive into MsSql Database
+    // Since Yangzi Xin team has already implemented getAllCarsByDealerId, I have kept this same as CSV data provider's getAllCarsByDealerId
+    // TODO @soumya if needed in future, update this method to actually read cars by dealer id from the MsSql database.
+    @Override
+    public List<Car> getAllCarsByDealerId(String dealerId) {
+        String inputDataPath = System.getProperty("user.dir") + "/src/dataprovider/mockedcsvdatabase/Cars.csv";
+        List<List<String>> records = new ArrayList<>();
+        try (Scanner scanner = new Scanner(new File(inputDataPath));) {
+            while (scanner.hasNextLine()) {
+                records.add(getRecordFromLine(scanner.nextLine()));
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        List<Car> carsByDealerId = new ArrayList<>();
+        for (int i = 1; i < records.size(); ++i) {
+            List<String> carRecord = records.get(i);
+            if (carRecord.get(1).equalsIgnoreCase(dealerId)) {
+                Car car = new Car();
+                car.setVIN(carRecord.get(0));
+                car.setDealerId(carRecord.get(1));
+                car.setCarCategory(CarCategory.fromString(carRecord.get(2)));
+                car.setMake(carRecord.get(3));
+                car.setModel(carRecord.get(4));
+                car.setYear(Integer.parseInt(carRecord.get(5)));
+                car.setMSRP(Double.parseDouble(carRecord.get(6)));
+                car.setColor(carRecord.get(7));
+                car.setLocation(carRecord.get(8));
+                car.setMileage(Integer.parseInt(carRecord.get(9)));
+                carsByDealerId.add(car);
+            }
+        }
+
+        return carsByDealerId;
+    }
+
+    @Override
     public void persistIncentive(CashDiscountIncentive cashDiscountIncentive) {
         String carVinUUID = UUID.randomUUID().toString();
         String sql = "INSERT INTO Incentive(id, incentiveType, dealerId, startDate, endDate, title, description, disclaimer, carVinUUID, " +
@@ -110,6 +156,7 @@ public class MsSqlDataProvider implements DataProvider{
         }
     }
 
+    @Override
     public void persistIncentive(LoanIncentive loanDiscountIncentive) {
         String carVinUUID = UUID.randomUUID().toString();
         String sql = "INSERT INTO Incentive(id, incentiveType, dealerId, startDate, endDate, title, description, disclaimer, carVinUUID, " +
@@ -141,6 +188,7 @@ public class MsSqlDataProvider implements DataProvider{
         }
     }
 
+    @Override
     public void persistIncentive(LeasingIncentive leasingIncentive) {
         String carVinUUID = UUID.randomUUID().toString();
         String sql = "INSERT INTO Incentive(id, incentiveType, dealerId, startDate, endDate, title, description, disclaimer, carVinUUID, " +
@@ -173,6 +221,7 @@ public class MsSqlDataProvider implements DataProvider{
         }
     }
 
+    @Override
     public void persistIncentive(RebateIncentive rebateIncentive) {
         String carVinUUID = UUID.randomUUID().toString();
         String rebateMapUUID = UUID.randomUUID().toString();
