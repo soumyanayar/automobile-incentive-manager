@@ -87,6 +87,140 @@ public class MsSqlDataProvider implements DataProvider{
         return values;
     }
 
+    public List<LoanIncentive> getAllLoanIncentivesByCarVIN(String carVIN) throws SQLException{
+        String sql = "SELECT * FROM \n" +
+                "\t(SELECT * FROM dbo.Incentive\n" +
+                "\tWHERE incentiveType = 'Loan Incentive')\n" +
+                "AS Incentive\n" +
+                "JOIN dbo.IncentiveVINs AS IncentiveVINs\n" +
+                "ON Incentive.carVinUUID = IncentiveVINs.incentiveVinID\n" +
+                "AND GETDATE() BETWEEN Incentive.startDate AND Incentive.endDate\n" +
+                "WHERE IncentiveVINs.carVIN = '"+ carVIN +"'";
+
+        List<LoanIncentive> loanIncentiveList = new ArrayList<>();
+
+        ResultSet rs = this.dbStatement.executeQuery(sql);
+        while(rs.next()){
+            // Retrieve by column name
+            String id  = rs.getString("id");
+            String incentiveType = rs.getString("incentiveType");
+            String dealerId = rs.getString("dealerId");
+            Date startDate = rs.getDate("startDate");
+            Date endDate = rs.getDate("endDate");
+            String title = rs.getString("title");
+            String description = rs.getString("description");
+            String disclaimer = rs.getString("disclaimer");
+            HashSet carVINs = new HashSet<>(Arrays.asList(rs.getString("carVIN")));
+            double apr = rs.getDouble("apr");
+            int months = rs.getInt("loanmonths");
+            loanIncentiveList.add(new LoanIncentive(id, dealerId, startDate, endDate, title, description, disclaimer, carVINs, apr, months));
+        }
+
+        return loanIncentiveList;
+    }
+
+    public List<CashDiscountIncentive> getAllCashDiscountIncentivesByCarVIN(String carVIN) throws SQLException {
+        String sql = "SELECT * FROM \n" +
+                "\t(SELECT * FROM dbo.Incentive\n" +
+                "\tWHERE incentiveType = 'Discount Incentive')\n" +
+                "AS Incentive\n" +
+                "JOIN dbo.IncentiveVINs AS IncentiveVINs\n" +
+                "ON Incentive.carVinUUID = IncentiveVINs.incentiveVinID\n" +
+                "AND GETDATE() BETWEEN Incentive.startDate AND Incentive.endDate\n" +
+                "WHERE IncentiveVINs.carVIN = '"+ carVIN +"'";
+
+        List<CashDiscountIncentive> cashDiscountIncentiveList = new ArrayList<>();
+
+        ResultSet rs = this.dbStatement.executeQuery(sql);
+        while(rs.next()){
+            // Retrieve by column name
+            String id  = rs.getString("id");
+            String incentiveType = rs.getString("incentiveType");
+            String dealerId = rs.getString("dealerId");
+            Date startDate = rs.getDate("startDate");
+            Date endDate = rs.getDate("endDate");
+            String title = rs.getString("title");
+            String description = rs.getString("description");
+            String disclaimer = rs.getString("disclaimer");
+            HashSet carVINs = new HashSet<>(Arrays.asList(rs.getString("carVIN")));
+            CashDiscountType cashDiscountType = CashDiscountType.fromString(rs.getString("cashDiscountType"));
+            double discountValue = rs.getInt("discountValue");
+            cashDiscountIncentiveList.add(new CashDiscountIncentive(id, dealerId, startDate, endDate, title, description, disclaimer, carVINs, discountValue, cashDiscountType));
+        }
+
+        return cashDiscountIncentiveList;
+    }
+
+    public List<RebateIncentive> getAllRebateIncentivesByCarVIN(String carVIN) throws SQLException{
+        String sql = "SELECT * FROM \n" +
+                "\t(SELECT * FROM dbo.Incentive\n" +
+                "\tWHERE incentiveType = 'Rebate Incentive') \n" +
+                "AS Incentive\n" +
+                "JOIN dbo.IncentiveVINs AS IncentiveVINs\n" +
+                "ON Incentive.carVinUUID = IncentiveVINs.incentiveVinID\n" +
+                "JOIN dbo.IncentiveRebates AS IncentiveRebates\n" +
+                "ON Incentive.rebateMapUUID = IncentiveRebates.rebateID\n" +
+                "AND GETDATE() BETWEEN Incentive.startDate AND Incentive.endDate\n" +
+                "WHERE IncentiveVINs.carVIN = '" + carVIN + "'";
+
+        List<RebateIncentive> rebateIncentiveList = new ArrayList<>();
+
+        ResultSet rs = this.dbStatement.executeQuery(sql);
+        while(rs.next()){
+            // Retrieve by column name
+            String id  = rs.getString("id");
+            String incentiveType = rs.getString("incentiveType");
+            String dealerId = rs.getString("dealerId");
+            Date startDate = rs.getDate("startDate");
+            Date endDate = rs.getDate("endDate");
+            String title = rs.getString("title");
+            String description = rs.getString("description");
+            String disclaimer = rs.getString("disclaimer");
+            HashSet carVINs = new HashSet<>(Arrays.asList(rs.getString("carVIN")));
+            HashMap rebateMap = new HashMap<String, Double>() {
+                {
+                    put(rs.getString("rebateType"), rs.getDouble("rebateValue"));
+                }
+            };
+            rebateIncentiveList.add(new RebateIncentive(id, dealerId, startDate, endDate, title, description, disclaimer, carVINs, rebateMap));
+        }
+
+        return rebateIncentiveList;
+    }
+
+    public List<LeasingIncentive> getAllLeasingIncentivesByCarVIN(String carVIN) throws SQLException{
+        String sql = "SELECT * FROM \n" +
+                "\t(SELECT * FROM dbo.Incentive\n" +
+                "\tWHERE incentiveType = 'Lease Incentive')\n" +
+                "AS Incentive\n" +
+                "JOIN dbo.IncentiveVINs AS IncentiveVINs\n" +
+                "ON Incentive.carVinUUID = IncentiveVINs.incentiveVinID\n" +
+                "AND GETDATE() BETWEEN Incentive.startDate AND Incentive.endDate\n" +
+                "WHERE IncentiveVINs.carVIN = '"+ carVIN +"'";
+
+        List<LeasingIncentive> leasingIncentiveList = new ArrayList<>();
+
+        ResultSet rs = this.dbStatement.executeQuery(sql);
+        while(rs.next()){
+            // Retrieve by column name
+            String id  = rs.getString("id");
+            String incentiveType = rs.getString("incentiveType");
+            String dealerId = rs.getString("dealerId");
+            Date startDate = rs.getDate("startDate");
+            Date endDate = rs.getDate("endDate");
+            String title = rs.getString("title");
+            String description = rs.getString("description");
+            String disclaimer = rs.getString("disclaimer");
+            HashSet carVINs = new HashSet<>(Arrays.asList(rs.getString("carVIN")));
+            int leasemonths = rs.getInt("leasemonths");
+            double signingPay = rs.getDouble("signingPay");
+            double monthlyPay = rs.getDouble("monthlyPay");
+            leasingIncentiveList.add(new LeasingIncentive(id, dealerId, startDate, endDate, title, description, disclaimer, carVINs, leasemonths, signingPay, monthlyPay));
+        }
+
+        return leasingIncentiveList;
+    }
+
     // This method is same as CSV data provider's getAllCarsByDealerId
     // This whole Data Provider was created to demonstrate how to persist incentive into MsSql Database
     // Since Yangzi Xin team has already implemented getAllCarsByDealerId, I have kept this same as CSV data provider's getAllCarsByDealerId
@@ -275,6 +409,16 @@ public class MsSqlDataProvider implements DataProvider{
         msSqlDataProvider.persistIncentive(loanIncentive);
         msSqlDataProvider.persistIncentive(leasingIncentive);
         msSqlDataProvider.persistIncentive(rebateIncentive);
+
+        List<LoanIncentive> loanIncentiveList = msSqlDataProvider.getAllLoanIncentivesByCarVIN("05d391f1-d622-4dd0-bf9d-c1e3ed45a7a5");
+        for (LoanIncentive incentive : loanIncentiveList) {
+            System.out.println(incentive.getId());
+        }
+
+        List<RebateIncentive> rebateIncentiveList = msSqlDataProvider.getAllRebateIncentivesByCarVIN("2ebfdfce-514f-4a75-b10d-f76417611df2");
+        for (RebateIncentive incentive : rebateIncentiveList) {
+            System.out.println(incentive.getId());
+        }
     }
 
     private static RebateIncentive createMockedRebateIncentiveInstance() {
